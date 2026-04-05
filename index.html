@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Inner Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#f5f5f7;--surface:#1a1a2e;--surface2:#252540;--border:rgba(255,255,255,.08);
+  --text:#f0f0f5;--text2:#9999bb;--accent:#00d4ff;--accent2:#7b61ff;--accent3:#ff6b9d;
+  --gradient1:linear-gradient(135deg,#00d4ff 0%,#7b61ff 50%,#ff6b9d 100%);
+  --gradient2:linear-gradient(135deg,#00d4ff22,#7b61ff22);
+  --radius:16px;
+  --m5:#00e5a0;--m4:#00d4ff;--m3:#a0a0c0;--m2:#ff9d5c;--m1:#ff6b9d;
+}
+html,body{background:#f5f5f7}
+body{font-family:'Zen Kaku Gothic New','Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden}
+.ctn{position:relative;z-index:1;max-width:440px;margin:0 auto;padding:20px 16px 100px}
+.hdr{text-align:center;padding:24px 0 24px}
+.hdr h1{font-family:'Outfit',sans-serif;font-size:28px;font-weight:700;letter-spacing:3px;background:var(--gradient1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-transform:uppercase;margin-bottom:6px}
+.hdr p{color:#999;font-size:12px;letter-spacing:2px}
+
+/* Notice banner */
+.notice{background:rgba(123,97,255,.08);border:1px solid rgba(123,97,255,.2);border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:.2s;animation:fadeUp .4s ease}
+.notice:active{transform:scale(.98)}
+.notice .n-icon{font-size:20px;flex-shrink:0}
+.notice .n-text{font-size:12px;color:var(--accent2);line-height:1.5}
+.notice .n-close{margin-left:auto;color:#999;font-size:16px;flex-shrink:0;padding:4px}
+
+.tabs{display:flex;background:#e8e8ef;border-radius:12px;padding:4px;margin-bottom:20px;border:none}
+.tab{flex:1;padding:10px;text-align:center;font-size:12px;font-weight:500;color:#888;border:none;background:none;border-radius:9px;cursor:pointer;transition:.3s}
+.tab.active{background:var(--surface);color:var(--accent);border:none}
+.card{background:var(--surface);border-radius:var(--radius);padding:18px;margin-bottom:14px;border:1px solid var(--border);transition:border-color .3s}
+.card:focus-within{border-color:rgba(0,212,255,.3)}
+.card-label{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.opt{font-size:10px;color:var(--text2);font-weight:400;letter-spacing:0;text-transform:none}
+
+/* Mood */
+.mood-row{display:flex;gap:6px}
+.mood-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 2px;background:var(--surface2);border:2px solid transparent;border-radius:12px;cursor:pointer;transition:.25s}
+.mood-btn:active{transform:scale(.95)}
+.mood-btn .emoji{font-size:20px}.mood-btn .label{font-size:9px;color:var(--text2);white-space:nowrap}
+.mood-btn.sel{box-shadow:0 0 16px rgba(0,212,255,.1)}
+.mood-btn[data-v="5"].sel{border-color:var(--m5);background:rgba(0,229,160,.08)}.mood-btn[data-v="5"].sel .label{color:var(--m5)}
+.mood-btn[data-v="4"].sel{border-color:var(--m4);background:rgba(0,212,255,.08)}.mood-btn[data-v="4"].sel .label{color:var(--m4)}
+.mood-btn[data-v="3"].sel{border-color:var(--m3);background:rgba(160,160,192,.08)}.mood-btn[data-v="3"].sel .label{color:var(--m3)}
+.mood-btn[data-v="2"].sel{border-color:var(--m2);background:rgba(255,157,92,.08)}.mood-btn[data-v="2"].sel .label{color:var(--m2)}
+.mood-btn[data-v="1"].sel{border-color:var(--m1);background:rgba(255,107,157,.08)}.mood-btn[data-v="1"].sel .label{color:var(--m1)}
+
+.tri-row{display:flex;gap:8px}
+.tri-btn{flex:1;padding:12px 6px;text-align:center;background:var(--surface2);border:2px solid transparent;border-radius:12px;cursor:pointer;transition:.25s;font-size:12px;color:var(--text2);line-height:1.4}
+.tri-btn:active{transform:scale(.97)}
+.tri-btn .t-icon{font-size:18px;display:block;margin-bottom:4px}
+.tri-btn.sel-green{border-color:var(--m5);background:rgba(0,229,160,.08);color:var(--m5)}
+.tri-btn.sel-gray{border-color:var(--m3);background:rgba(160,160,192,.08);color:var(--m3)}
+.tri-btn.sel-purple{border-color:var(--accent2);background:rgba(123,97,255,.08);color:var(--accent2)}
+.tri-btn.sel-pink{border-color:var(--m1);background:rgba(255,107,157,.08);color:var(--m1)}
+.tri-btn.sel-orange{border-color:var(--m2);background:rgba(255,157,92,.08);color:var(--m2)}
+
+.bin-row{display:flex;gap:10px}
+.bin-btn{flex:1;padding:14px 8px;text-align:center;background:var(--surface2);border:2px solid transparent;border-radius:12px;cursor:pointer;transition:.25s;font-size:13px;color:var(--text2)}
+.bin-btn:active{transform:scale(.97)}
+.bin-btn.sel-yes{border-color:var(--m2);background:rgba(255,157,92,.08);color:var(--m2)}
+.bin-btn.sel-no{border-color:var(--m5);background:rgba(0,229,160,.08);color:var(--m5)}
+
+
+
+textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;color:var(--text);font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;line-height:1.7;resize:none;outline:none;transition:border-color .3s}
+textarea:focus{border-color:rgba(0,212,255,.4)}
+textarea::placeholder{color:rgba(136,136,170,.5)}
+
+.sub-btn{width:100%;padding:16px;background:var(--gradient1);border:none;border-radius:12px;color:#fff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:.3s;box-shadow:0 4px 24px rgba(0,212,255,.2);margin-top:8px}
+.sub-btn:active{transform:scale(.97)}
+.sub-btn:disabled{opacity:.4;cursor:not-allowed}
+
+.reflect-btn{width:100%;padding:14px;background:var(--surface);border:1px solid rgba(123,97,255,.3);border-radius:12px;color:var(--accent2);font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:.3s;margin-top:12px}
+.reflect-btn:active{transform:scale(.97)}
+
+.reflect-panel{background:var(--surface);border:1px solid rgba(123,97,255,.2);border-radius:var(--radius);padding:18px;margin-top:14px;display:none}
+.reflect-panel.show{display:block;animation:fadeUp .3s ease}
+
+/* Date toggle for reflect */
+.date-toggle{display:flex;gap:8px;margin-bottom:14px}
+.date-toggle button{flex:1;padding:10px;text-align:center;background:var(--surface2);border:2px solid transparent;border-radius:10px;font-size:12px;color:var(--text2);cursor:pointer;transition:.25s;font-family:'Zen Kaku Gothic New',sans-serif}
+.date-toggle button:active{transform:scale(.97)}
+.date-toggle button.sel-purple{border-color:var(--accent2);background:rgba(123,97,255,.08);color:var(--accent2)}
+
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--surface);border:1px solid rgba(0,229,160,.3);color:#00e5a0;padding:14px 28px;border-radius:40px;font-size:13px;font-weight:500;z-index:100;transition:transform .4s cubic-bezier(.16,1,.3,1);pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* PIXELS */
+.px-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:14px}
+.px-nav button{background:var(--surface);border:1px solid var(--border);color:var(--text2);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:.2s}
+.px-nav button:active{transform:scale(.9)}
+.px-nav .yr{font-family:'Outfit',sans-serif;font-size:20px;font-weight:700;color:var(--text);letter-spacing:1px}
+.legend{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.legend-i{display:flex;align-items:center;gap:4px}
+.legend-c{width:12px;height:12px;border-radius:3px}
+.legend-t{font-size:9px;color:var(--text2)}
+.px-wrap{background:var(--surface);border-radius:var(--radius);padding:14px;border:1px solid var(--border);margin-bottom:16px;overflow-x:auto}
+.ml{display:grid;grid-template-columns:24px repeat(12,1fr);gap:2px;margin-bottom:3px}
+.ml span{font-size:8px;color:var(--text2);text-align:center;font-weight:500}
+.pg{display:grid;grid-template-columns:24px repeat(12,1fr);gap:2px}
+.dl{font-size:8px;color:var(--text2);display:flex;align-items:center;font-weight:500}
+.px{aspect-ratio:1;border-radius:3px;background:var(--surface2);cursor:pointer;transition:.15s;position:relative;min-width:0}
+.px:hover{transform:scale(1.3);z-index:2}
+.px.fu{opacity:.3;cursor:default}.px.fu:hover{transform:none}
+.px[data-m="5"]{background:var(--m5)}.px[data-m="4"]{background:var(--m4)}
+.px[data-m="3"]{background:var(--m3)}.px[data-m="2"]{background:var(--m2)}.px[data-m="1"]{background:var(--m1)}
+.ptt{display:none;position:fixed;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--text);z-index:50;max-width:240px;box-shadow:0 8px 32px rgba(0,0,0,.5);pointer-events:none}
+.ptt.show{display:block}
+
+/* Stats */
+.stats{display:flex;gap:8px;margin-bottom:16px}
+.sc{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center}
+.sc .n{font-family:'Outfit',sans-serif;font-size:18px;font-weight:700;background:var(--gradient1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sc .d{font-size:9px;color:var(--text2);margin-top:2px}
+
+/* History */
+.log-e{background:var(--surface);border-radius:var(--radius);padding:16px;margin-bottom:12px;border:1px solid var(--border);border-left:3px solid var(--accent)}
+.log-e[data-m="5"]{border-left-color:var(--m5)}.log-e[data-m="4"]{border-left-color:var(--m4)}
+.log-e[data-m="3"]{border-left-color:var(--m3)}.log-e[data-m="2"]{border-left-color:var(--m2)}.log-e[data-m="1"]{border-left-color:var(--m1)}
+.log-h{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;flex-wrap:wrap;gap:6px}
+.log-d{font-size:11px;color:var(--text2)}
+.log-tags{display:flex;gap:4px;flex-wrap:wrap}
+.tag{font-size:9px;font-weight:600;padding:3px 8px;border-radius:16px;letter-spacing:.3px}
+.tag-m5{background:rgba(0,229,160,.12);color:var(--m5)}.tag-m4{background:rgba(0,212,255,.12);color:var(--m4)}
+.tag-m3{background:rgba(160,160,192,.12);color:var(--m3)}.tag-m2{background:rgba(255,157,92,.12);color:var(--m2)}.tag-m1{background:rgba(255,107,157,.12);color:var(--m1)}
+.tag-open{background:rgba(0,229,160,.1);color:var(--m5)}.tag-guarded{background:rgba(123,97,255,.1);color:var(--accent2)}.tag-neutral{background:rgba(160,160,192,.1);color:var(--m3)}
+.log-c p{font-size:12px;line-height:1.7;color:var(--text);margin-bottom:3px}
+.log-c .fl{font-size:9px;color:var(--text2);letter-spacing:1px;text-transform:uppercase;margin-top:8px;margin-bottom:3px}
+.log-del{background:none;border:none;color:var(--text2);font-size:10px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:.2s;margin-top:6px}
+.log-del:hover{color:var(--m1);background:rgba(255,107,157,.1)}
+.empty{text-align:center;padding:50px 20px;color:var(--text2)}
+.empty .ic{font-size:44px;margin-bottom:14px}
+.empty p{font-size:13px;line-height:1.8}
+.exp-bar{display:flex;gap:10px;margin-bottom:16px}
+.exp-btn{flex:1;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text2);font-family:'Zen Kaku Gothic New',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:.2s}
+.exp-btn:active{transform:scale(.97)}
+.exp-btn:hover{border-color:rgba(0,212,255,.3);color:var(--accent)}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="ctn">
+<div class="hdr"><h1>Inner Log</h1><p>自分を知るための記録</p></div>
+
+<!-- Yesterday notice -->
+<div class="notice hidden" id="yd-notice" onclick="openReflectYesterday()">
+  <span class="n-icon">🌙</span>
+  <span class="n-text">昨日の振り返りがまだだよ</span>
+  <span class="n-close" onclick="event.stopPropagation();dismissNotice()">✕</span>
+</div>
+
+<div class="tabs">
+<button class="tab active" onclick="sw('input')">記録</button>
+<button class="tab" onclick="sw('pixels')">カレンダー</button>
+<button class="tab" onclick="sw('history')">履歴</button>
+</div>
+
+<!-- INPUT -->
+<div id="t-input">
+
+<div class="card"><div class="card-label">今の気分</div>
+<div class="mood-row">
+<button class="mood-btn" data-v="5" onclick="pick('mood',5)"><span class="emoji">🔥</span><span class="label">すごく良い</span></button>
+<button class="mood-btn" data-v="4" onclick="pick('mood',4)"><span class="emoji">☀️</span><span class="label">良い</span></button>
+<button class="mood-btn" data-v="3" onclick="pick('mood',3)"><span class="emoji">☁️</span><span class="label">普通</span></button>
+<button class="mood-btn" data-v="2" onclick="pick('mood',2)"><span class="emoji">🌧</span><span class="label">悪い</span></button>
+<button class="mood-btn" data-v="1" onclick="pick('mood',1)"><span class="emoji">⚡</span><span class="label">すごく悪い</span></button>
+</div></div>
+
+<div class="card"><div class="card-label">スタンス</div>
+<div class="tri-row">
+<button class="tri-btn" data-g="stance" data-v="open" onclick="pick('stance','open')"><span class="t-icon">🛡️→</span>開いてる</button>
+<button class="tri-btn" data-g="stance" data-v="neutral" onclick="pick('stance','neutral')"><span class="t-icon">―</span>どちらでもない</button>
+<button class="tri-btn" data-g="stance" data-v="guarded" onclick="pick('stance','guarded')"><span class="t-icon">🛡️</span>構えてる</button>
+</div></div>
+
+<div class="card"><div class="card-label">今日の予感</div>
+<div class="tri-row">
+<button class="tri-btn" data-g="forecast" data-v="good" onclick="pick('forecast','good')"><span class="t-icon">✨</span>いいことありそう</button>
+<button class="tri-btn" data-g="forecast" data-v="neutral" onclick="pick('forecast','neutral')"><span class="t-icon">→</span>普通</button>
+<button class="tri-btn" data-g="forecast" data-v="bad" onclick="pick('forecast','bad')"><span class="t-icon">💭</span>嫌なことありそう</button>
+</div></div>
+
+<div class="card"><div class="card-label">体の調子</div>
+<div class="tri-row">
+<button class="tri-btn" data-g="body" data-v="good" onclick="pick('body','good')"><span class="t-icon">💪</span>好調</button>
+<button class="tri-btn" data-g="body" data-v="normal" onclick="pick('body','normal')"><span class="t-icon">🙂</span>普通</button>
+<button class="tri-btn" data-g="body" data-v="pain" onclick="pick('body','pain')"><span class="t-icon">🤕</span>どこか痛い</button>
+</div></div>
+
+<div class="card"><div class="card-label">外からの干渉</div>
+<div class="bin-row">
+<button class="bin-btn" data-g="ext" data-v="yes" onclick="pick('ext','yes')">あった</button>
+<button class="bin-btn" data-g="ext" data-v="no" onclick="pick('ext','no')">なかった</button>
+</div></div>
+
+<div class="card"><div class="card-label">何があった？ <span class="opt">（任意）</span></div>
+<textarea id="f-event" rows="2" placeholder="出来事を自由に"></textarea></div>
+
+<div class="card"><div class="card-label">どう感じた？どう反応した？ <span class="opt">（任意）</span></div>
+<textarea id="f-reaction" rows="2" placeholder="そのとき思ったこと、やったこと"></textarea></div>
+
+
+
+<div class="card"><div class="card-label">今日マシだったこと <span class="opt">（任意）</span></div>
+<textarea id="f-good" rows="2" placeholder="小さいことでもOK"></textarea></div>
+
+<button class="sub-btn" id="save-btn" onclick="save()" disabled>SAVE</button>
+
+<button class="reflect-btn" onclick="toggleReflect()">🌙 振り返りを書く</button>
+<div class="reflect-panel" id="reflect-panel">
+<div class="card-label" style="margin-bottom:10px">いつの振り返り？</div>
+<div class="date-toggle">
+<button id="ref-today" class="sel-purple" onclick="pickRefDate('today')">今日</button>
+<button id="ref-yesterday" onclick="pickRefDate('yesterday')">昨日</button>
+</div>
+<div class="card" style="margin-bottom:12px"><div class="card-label">実際どうだった？</div>
+<div class="tri-row">
+<button class="tri-btn" data-g="actual" data-v="good" onclick="pick('actual','good')"><span class="t-icon">😊</span>良かった</button>
+<button class="tri-btn" data-g="actual" data-v="neutral" onclick="pick('actual','neutral')"><span class="t-icon">😐</span>普通だった</button>
+<button class="tri-btn" data-g="actual" data-v="bad" onclick="pick('actual','bad')"><span class="t-icon">😮‍💨</span>悪かった</button>
+</div></div>
+<div class="card" style="margin-bottom:0"><div class="card-label">振り返りメモ <span class="opt">（任意）</span></div>
+<textarea id="f-reflect" rows="2" placeholder="予感と比べてどうだった？"></textarea></div>
+<button class="sub-btn" style="margin-top:14px" onclick="saveReflect()">振り返りを保存</button>
+</div>
+</div>
+
+<!-- PIXELS -->
+<div id="t-pixels" class="hidden">
+<div class="px-nav">
+<button onclick="chYr(-1)">◀</button>
+<span class="yr" id="px-yr">2026</span>
+<button onclick="chYr(1)">▶</button>
+</div>
+<div class="legend">
+<div class="legend-i"><div class="legend-c" style="background:var(--m5)"></div><span class="legend-t">すごく良い</span></div>
+<div class="legend-i"><div class="legend-c" style="background:var(--m4)"></div><span class="legend-t">良い</span></div>
+<div class="legend-i"><div class="legend-c" style="background:var(--m3)"></div><span class="legend-t">普通</span></div>
+<div class="legend-i"><div class="legend-c" style="background:var(--m2)"></div><span class="legend-t">悪い</span></div>
+<div class="legend-i"><div class="legend-c" style="background:var(--m1)"></div><span class="legend-t">すごく悪い</span></div>
+</div>
+<div class="px-wrap"><div id="px-ctn"></div></div>
+<div class="stats" id="px-stats"></div>
+</div>
+
+<!-- HISTORY -->
+<div id="t-history" class="hidden">
+<div class="stats" id="h-stats"></div>
+<div class="exp-bar">
+<button class="exp-btn" onclick="exportCSV()">📄 CSV出力</button>
+<button class="exp-btn" onclick="clearAll()">🗑 全削除</button>
+</div>
+<div id="log-list"></div>
+</div>
+</div>
+
+<div class="toast" id="toast">✓ 保存しました</div>
+<div class="ptt" id="tooltip"></div>
+
+<script>
+const ML={5:'すごく良い',4:'良い',3:'普通',2:'悪い',1:'すごく悪い'};
+const SL={open:'開いてる',guarded:'構えてる',neutral:'どちらでもない'};
+const FL={good:'いいことありそう',neutral:'普通',bad:'嫌なことありそう'};
+const BL={good:'好調',normal:'普通',pain:'どこか痛い'};
+const EL={yes:'あった',no:'なかった'};
+const AL={good:'良かった',neutral:'普通だった',bad:'悪かった'};
+const MJ=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+
+let sel={mood:null,stance:null,forecast:null,body:null,ext:null,actual:null};
+let pxYr=new Date().getFullYear();
+let refDate='today';
+
+function getLogs(){try{return JSON.parse(localStorage.getItem('innerlog4')||'[]')}catch{return[]}}
+function saveLogs(l){localStorage.setItem('innerlog4',JSON.stringify(l))}
+
+// Date helpers
+function toDateKey(d){return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`}
+function getYesterday(){const d=new Date();d.setDate(d.getDate()-1);return d}
+
+// Check yesterday's reflect
+function checkYesterdayReflect(){
+  const logs=getLogs();
+  const ydKey=toDateKey(getYesterday());
+  const hasYdLog=logs.some(l=>l.type==='log'&&toDateKey(new Date(l.date))===ydKey);
+  const hasYdReflect=logs.some(l=>l.type==='reflect'&&l.targetDate===ydKey);
+  const dismissed=sessionStorage.getItem('yd-dismissed');
+  if(hasYdLog&&!hasYdReflect&&!dismissed){
+    document.getElementById('yd-notice').classList.remove('hidden');
+  } else {
+    document.getElementById('yd-notice').classList.add('hidden');
+  }
+}
+
+function dismissNotice(){
+  sessionStorage.setItem('yd-dismissed','1');
+  document.getElementById('yd-notice').classList.add('hidden');
+}
+
+function openReflectYesterday(){
+  sw('input');
+  document.getElementById('reflect-panel').classList.add('show');
+  pickRefDate('yesterday');
+  dismissNotice();
+  document.getElementById('reflect-panel').scrollIntoView({behavior:'smooth'});
+}
+
+// Selection
+function pick(g,v){
+  sel[g]=v;
+  if(g==='mood'){
+    document.querySelectorAll('.mood-btn').forEach(b=>b.classList.toggle('sel',parseInt(b.dataset.v)===v));
+  } else {
+    const cm={
+      stance:{open:'sel-green',neutral:'sel-gray',guarded:'sel-purple'},
+      forecast:{good:'sel-green',neutral:'sel-gray',bad:'sel-pink'},
+      body:{good:'sel-green',normal:'sel-gray',pain:'sel-orange'},
+      ext:{yes:'sel-yes',no:'sel-no'},
+      actual:{good:'sel-green',neutral:'sel-gray',bad:'sel-pink'}
+    };
+    const isB=g==='ext';
+    const btns=document.querySelectorAll((isB?'.bin-btn':'.tri-btn')+'[data-g="'+g+'"]');
+    btns.forEach(b=>{Object.values(cm[g]).forEach(c=>b.classList.remove(c));if(b.dataset.v===v)b.classList.add(cm[g][v])});
+  }
+  checkSave();
+}
+
+function checkSave(){document.getElementById('save-btn').disabled=!sel.mood}
+
+function pickRefDate(d){
+  refDate=d;
+  document.getElementById('ref-today').classList.toggle('sel-purple',d==='today');
+  document.getElementById('ref-yesterday').classList.toggle('sel-purple',d==='yesterday');
+}
+
+function save(){
+  if(!sel.mood)return;
+  const e={
+    id:Date.now(),date:new Date().toISOString(),type:'log',
+    targetDate:toDateKey(new Date()),
+    mood:sel.mood,stance:sel.stance||'neutral',
+    forecast:sel.forecast||'neutral',body:sel.body||'normal',ext:sel.ext||'no',
+    event:document.getElementById('f-event').value.trim(),
+    reaction:document.getElementById('f-reaction').value.trim(),
+    good:document.getElementById('f-good').value.trim()
+  };
+  const logs=getLogs();logs.unshift(e);saveLogs(logs);
+  resetForm();showToast();
+}
+
+function saveReflect(){
+  const target=refDate==='yesterday'?getYesterday():new Date();
+  const e={
+    id:Date.now(),date:new Date().toISOString(),type:'reflect',
+    targetDate:toDateKey(target),
+    actual:sel.actual||'neutral',
+    reflectNote:document.getElementById('f-reflect').value.trim()
+  };
+  const logs=getLogs();logs.unshift(e);saveLogs(logs);
+  sel.actual=null;
+  document.querySelectorAll('.tri-btn[data-g="actual"]').forEach(b=>b.classList.remove('sel-green','sel-gray','sel-pink'));
+  document.getElementById('f-reflect').value='';
+  document.getElementById('reflect-panel').classList.remove('show');
+  pickRefDate('today');
+  showToast();checkYesterdayReflect();
+}
+
+function resetForm(){
+  sel={mood:null,stance:null,forecast:null,body:null,ext:null,actual:null};
+  document.querySelectorAll('.mood-btn,.tri-btn,.bin-btn').forEach(b=>{
+    b.classList.remove('sel','sel-green','sel-gray','sel-purple','sel-pink','sel-orange','sel-yes','sel-no');
+  });
+  document.querySelectorAll('#t-input textarea').forEach(t=>t.value='');
+  checkSave();
+  document.getElementById('reflect-panel').classList.remove('show');
+  pickRefDate('today');
+}
+
+function toggleReflect(){document.getElementById('reflect-panel').classList.toggle('show')}
+function showToast(){const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
+
+function sw(tab){
+  document.querySelectorAll('.tab').forEach((t,i)=>{const ts=['input','pixels','history'];t.classList.toggle('active',ts[i]===tab)});
+  ['t-input','t-pixels','t-history'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  document.getElementById('t-'+tab).classList.remove('hidden');
+  if(tab==='pixels')renderPx();
+  if(tab==='history')renderHist();
+}
+
+// ===== PIXELS =====
+function chYr(d){pxYr+=d;document.getElementById('px-yr').textContent=pxYr;renderPx()}
+
+function renderPx(){
+  const logs=getLogs().filter(l=>l.type==='log');
+  const today=new Date();
+  // Last entry per day wins (color = last recorded mood)
+  const dayMap={};
+  const sorted=[...logs].sort((a,b)=>new Date(a.date)-new Date(b.date));
+  sorted.forEach(l=>{const d=new Date(l.date);const k=`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;dayMap[k]=l});
+
+  let h='<div class="ml"><span></span>';
+  MJ.forEach(m=>{h+=`<span>${m}</span>`});
+  h+='</div><div class="pg">';
+  for(let day=1;day<=31;day++){
+    h+=`<div class="dl">${day}</div>`;
+    for(let mo=0;mo<12;mo++){
+      const dim=new Date(pxYr,mo+1,0).getDate();
+      if(day>dim){h+='<div class="px" style="visibility:hidden"></div>';continue}
+      const dt=new Date(pxYr,mo,day);
+      const k=`${pxYr}-${mo}-${day}`;
+      const entry=dayMap[k];
+      const isFu=dt>today;
+      const mA=entry?`data-m="${entry.mood}"`:'';
+      const ds=`${pxYr}/${mo+1}/${day}`;
+      const mL=entry?ML[entry.mood]:'記録なし';
+      const st=entry?(SL[entry.stance]||''):'';
+      const ev=entry?escA(entry.event||''):'';
+      h+=`<div class="px${isFu?' fu':''}" ${mA} data-ds="${ds}" data-ml="${mL}" data-st="${st}" data-ev="${ev}"
+        ontouchstart="showTT(event,this)" ontouchend="hideTT()" onmouseenter="showTT(event,this)" onmouseleave="hideTT()"></div>`;
+    }
+  }
+  h+='</div>';
+  document.getElementById('px-ctn').innerHTML=h;
+
+  const yl=logs.filter(l=>new Date(l.date).getFullYear()===pxYr);
+  const sEl=document.getElementById('px-stats');
+  if(yl.length){
+    const avg=(yl.reduce((s,l)=>s+l.mood,0)/yl.length).toFixed(1);
+    const days=new Set(yl.map(l=>new Date(l.date).toDateString())).size;
+    const op=new Set(yl.filter(l=>l.stance==='open').map(l=>new Date(l.date).toDateString())).size;
+    const gu=new Set(yl.filter(l=>l.stance==='guarded').map(l=>new Date(l.date).toDateString())).size;
+    sEl.innerHTML=`<div class="sc"><div class="n">${days}</div><div class="d">記録日</div></div>
+      <div class="sc"><div class="n">${avg}</div><div class="d">平均</div></div>
+      <div class="sc"><div class="n">${op}</div><div class="d">開いた日</div></div>
+      <div class="sc"><div class="n">${gu}</div><div class="d">構えた日</div></div>`;
+  } else sEl.innerHTML='';
+}
+
+function escA(s){return s.replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,' ')}
+
+function showTT(e,el){
+  if(el.classList.contains('fu'))return;
+  const tt=document.getElementById('tooltip');
+  let h=`<div class="td" style="color:var(--text2);font-size:10px;margin-bottom:4px">${el.dataset.ds}</div><div style="font-weight:600;margin-bottom:2px">${el.dataset.ml}</div>`;
+  if(el.dataset.st)h+=`<div style="font-size:11px;color:var(--text2);margin-top:2px">${el.dataset.st}</div>`;
+  if(el.dataset.ev)h+=`<div style="font-size:11px;margin-top:4px">${el.dataset.ev.substring(0,60)}${el.dataset.ev.length>60?'...':''}</div>`;
+  tt.innerHTML=h;tt.classList.add('show');
+  const r=el.getBoundingClientRect();
+  let left=r.left+r.width/2-120,top=r.top-tt.offsetHeight-8;
+  if(top<10)top=r.bottom+8;if(left<10)left=10;if(left+240>window.innerWidth)left=window.innerWidth-250;
+  tt.style.left=left+'px';tt.style.top=top+'px';
+}
+function hideTT(){document.getElementById('tooltip').classList.remove('show')}
+
+// ===== HISTORY =====
+function renderHist(){
+  const logs=getLogs();
+  const list=document.getElementById('log-list');
+  const sEl=document.getElementById('h-stats');
+  const logE=logs.filter(l=>l.type==='log');
+  if(logE.length){
+    const avg=(logE.reduce((s,l)=>s+l.mood,0)/logE.length).toFixed(1);
+    const days=new Set(logE.map(l=>new Date(l.date).toLocaleDateString('ja-JP'))).size;
+    sEl.innerHTML=`<div class="sc"><div class="n">${logs.length}</div><div class="d">記録数</div></div>
+      <div class="sc"><div class="n">${days}</div><div class="d">記録日数</div></div>
+      <div class="sc"><div class="n">${avg}</div><div class="d">平均気分</div></div>`;
+  } else sEl.innerHTML='';
+
+  if(!logs.length){list.innerHTML='<div class="empty"><div class="ic">📝</div><p>まだ記録がありません<br>最初の一歩を踏み出そう</p></div>';return}
+
+  list.innerHTML=logs.map(l=>{
+    const d=new Date(l.date);
+    const ds=d.toLocaleDateString('ja-JP',{year:'numeric',month:'short',day:'numeric',weekday:'short'})+' '+d.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+
+    if(l.type==='reflect'){
+      const tgtLabel=l.targetDate||'';
+      return `<div class="log-e" style="border-left-color:var(--accent2)">
+        <div class="log-h"><span class="log-d">${ds}</span><div class="log-tags"><span class="tag" style="background:rgba(123,97,255,.12);color:var(--accent2)">🌙 振り返り</span>
+        ${l.actual?`<span class="tag tag-m${l.actual==='good'?'5':l.actual==='bad'?'1':'3'}">${AL[l.actual]}</span>`:''}
+        ${tgtLabel?`<span class="tag tag-neutral">${tgtLabel}</span>`:''}</div></div>
+        <div class="log-c">${l.reflectNote?`<p>${escH(l.reflectNote)}</p>`:''}</div>
+        <button class="log-del" onclick="delLog(${l.id})">削除</button></div>`;
+    }
+
+    const tags=[];
+    tags.push(`<span class="tag tag-m${l.mood}">${ML[l.mood]}</span>`);
+    if(l.stance&&l.stance!=='neutral')tags.push(`<span class="tag tag-${l.stance}">${SL[l.stance]}</span>`);
+    if(l.forecast&&l.forecast!=='neutral')tags.push(`<span class="tag" style="background:rgba(0,212,255,.08);color:var(--accent)">${FL[l.forecast]}</span>`);
+    if(l.body&&l.body!=='normal')tags.push(`<span class="tag" style="background:rgba(160,160,192,.08);color:var(--m3)">${BL[l.body]}</span>`);
+    if(l.ext==='yes')tags.push(`<span class="tag" style="background:rgba(255,157,92,.08);color:var(--m2)">外部干渉あり</span>`);
+
+    let c='';
+    if(l.event)c+=`<div class="fl">出来事</div><p>${escH(l.event)}</p>`;
+    if(l.reaction)c+=`<div class="fl">反応・感じたこと</div><p>${escH(l.reaction)}</p>`;
+    if(l.good)c+=`<div class="fl">マシだったこと</div><p>${escH(l.good)}</p>`;
+
+    return `<div class="log-e" data-m="${l.mood}">
+      <div class="log-h"><span class="log-d">${ds}</span><div class="log-tags">${tags.join('')}</div></div>
+      <div class="log-c">${c}</div>
+      <button class="log-del" onclick="delLog(${l.id})">削除</button></div>`;
+  }).join('');
+}
+
+function escH(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}
+function delLog(id){if(!confirm('この記録を削除しますか？'))return;saveLogs(getLogs().filter(l=>l.id!==id));renderHist()}
+function clearAll(){if(!confirm('すべての記録を削除しますか？'))return;if(!confirm('本当に？'))return;saveLogs([]);renderHist()}
+
+// ===== CSV EXPORT =====
+function exportCSV(){
+  const logs=getLogs();
+  if(!logs.length){alert('記録がありません');return}
+
+  // Group by targetDate
+  const dayData={};
+  logs.forEach(l=>{
+    const dk=l.targetDate||toDateKey(new Date(l.date));
+    if(!dayData[dk])dayData[dk]={logs:[],reflects:[]};
+    if(l.type==='reflect')dayData[dk].reflects.push(l);
+    else dayData[dk].logs.push(l);
+  });
+
+  const BOM='\uFEFF';
+  const hdr='日付,気分数値,気分,スタンス,予感,体調,外部干渉,出来事,反応,マシだったこと,実際どうだった,振り返りメモ';
+  const rows=[];
+  const sortedKeys=Object.keys(dayData).sort((a,b)=>{
+    const pa=a.split('-').map(Number),pb=b.split('-').map(Number);
+    return new Date(pb[0],pb[1]-1,pb[2])-new Date(pa[0],pa[1]-1,pa[2]);
+  });
+
+  sortedKeys.forEach(dk=>{
+    const dd=dayData[dk];
+    const lastLog=dd.logs.sort((a,b)=>new Date(b.date)-new Date(a.date))[0];
+    const lastRef=dd.reflects.sort((a,b)=>new Date(b.date)-new Date(a.date))[0];
+
+    rows.push([
+      dk,
+      lastLog?lastLog.mood:'',
+      lastLog?ML[lastLog.mood]:'',
+      lastLog?(SL[lastLog.stance]||''):'',
+      lastLog?(FL[lastLog.forecast]||''):'',
+      lastLog?(BL[lastLog.body]||''):'',
+      lastLog?(EL[lastLog.ext]||''):'',
+      lastLog?csvE(lastLog.event):'',
+      lastLog?csvE(lastLog.reaction):'',
+      lastLog?csvE(lastLog.good):'',
+      lastRef?(AL[lastRef.actual]||''):'',
+      lastRef?csvE(lastRef.reflectNote):''
+    ].join(','));
+  });
+
+  const csv=BOM+hdr+'\n'+rows.join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`inner-log_${new Date().toISOString().slice(0,10)}.csv`;a.click();URL.revokeObjectURL(url);
+}
+
+function csvE(s){if(!s)return'';return'"'+s.replace(/"/g,'""').replace(/\n/g,' ')+'"'}
+
+// Init
+checkYesterdayReflect();
+</script>
+</body>
+</html>
