@@ -1,572 +1,763 @@
 <!DOCTYPE html>
+
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Unguard</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{
-  --bg:#f5f5f7;--surface:#1a1a2e;--surface2:#252540;--border:rgba(255,255,255,.08);
-  --text:#f0f0f5;--text2:#9999bb;--accent:#00d4ff;--accent2:#7b61ff;--accent3:#ff6b9d;
-  --gradient1:linear-gradient(135deg,#00d4ff 0%,#7b61ff 50%,#ff6b9d 100%);
-  --gradient2:linear-gradient(135deg,#00d4ff22,#7b61ff22);
-  --radius:16px;
-  --m5:#00e5a0;--m4:#00d4ff;--m3:#a0a0c0;--m2:#ff9d5c;--m1:#ff6b9d;
-}
-html,body{background:#f5f5f7}
-body{font-family:'Zen Kaku Gothic New','Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden}
-.ctn{position:relative;z-index:1;max-width:440px;margin:0 auto;padding:20px 16px 100px}
-.hdr{text-align:center;padding:24px 0 24px}
-.hdr h1{font-family:'Outfit',sans-serif;font-size:28px;font-weight:700;letter-spacing:3px;background:var(--gradient1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-transform:uppercase;margin-bottom:6px}
-.hdr p{color:#999;font-size:12px;letter-spacing:2px}
+html{min-height:100%;background:#0d1b2a}
+body{font-family:'Zen Kaku Gothic New','Outfit',sans-serif;color:#f0f0f5;min-height:100dvh;max-width:420px;margin:0 auto;padding:16px 16px 80px;transition:background 0.8s ease;background:linear-gradient(180deg,#0d1b2a 0%,#1b2838 40%,#1a1a3e 100%)}
 
-/* Notice banner */
-.notice{background:rgba(123,97,255,.08);border:1px solid rgba(123,97,255,.2);border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:.2s;animation:fadeUp .4s ease}
-.notice:active{transform:scale(.98)}
-.notice .n-icon{font-size:20px;flex-shrink:0}
-.notice .n-text{font-size:12px;color:var(--accent2);line-height:1.5}
-.notice .n-close{margin-left:auto;color:#999;font-size:16px;flex-shrink:0;padding:4px}
+/* ===== STARS ===== */
+#star-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;transition:opacity 1s ease}
+body>*:not(#star-canvas){position:relative;z-index:1}
 
-.tabs{display:flex;background:#e8e8ef;border-radius:12px;padding:4px;margin-bottom:20px;border:none}
-.tab{flex:1;padding:10px;text-align:center;font-size:12px;font-weight:500;color:#888;border:none;background:none;border-radius:9px;cursor:pointer;transition:.3s}
-.tab.active{background:var(--surface);color:var(--accent);border:none}
-.card{background:var(--surface);border-radius:var(--radius);padding:18px;margin-bottom:14px;border:1px solid var(--border);transition:border-color .3s}
-.card:focus-within{border-color:rgba(0,212,255,.3)}
-.card-label{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
-.opt{font-size:10px;color:var(--text2);font-weight:400;letter-spacing:0;text-transform:none}
+/* ===== CELESTIAL ===== */
+.celestial{position:absolute;left:16px;top:4px;width:34px;height:34px;z-index:2;display:flex;align-items:center;justify-content:center}
+.cel-icon{font-size:26px;transition:filter 0.5s ease;line-height:1}
+.sun-rays{position:absolute;top:50%;left:50%;width:40px;height:40px;transform:translate(-50%,-50%);opacity:0;transition:opacity 0.8s ease;pointer-events:none}
+.sun-rays span{position:absolute;display:block;width:2px;height:5px;background:#FFD700;border-radius:1px;top:0;left:50%;transform-origin:50% 20px}
+.sun-rays span:nth-child(1){transform:rotate(0deg)}.sun-rays span:nth-child(2){transform:rotate(45deg)}.sun-rays span:nth-child(3){transform:rotate(90deg)}.sun-rays span:nth-child(4){transform:rotate(135deg)}.sun-rays span:nth-child(5){transform:rotate(180deg)}.sun-rays span:nth-child(6){transform:rotate(225deg)}.sun-rays span:nth-child(7){transform:rotate(270deg)}.sun-rays span:nth-child(8){transform:rotate(315deg)}
 
-/* Mood */
-.mood-row{display:flex;gap:6px}
-.mood-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 2px;background:var(--surface2);border:2px solid transparent;border-radius:12px;cursor:pointer;transition:.25s}
+.hdr{text-align:center;padding:20px 0 12px;position:relative}
+.hdr h1{font-family:'Outfit',sans-serif;font-size:26px;font-weight:700;letter-spacing:3px;background:linear-gradient(135deg,#FFD700,#FF6B6B,#7b61ff,#4a6fa5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase}
+.hdr p{color:rgba(255,255,255,.5);font-size:11px;letter-spacing:2px;margin-top:4px}
+
+.tabs{display:flex;background:rgba(10,15,30,.65);border-radius:12px;padding:4px;margin-bottom:18px;backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08)}
+.tab{flex:1;padding:10px;text-align:center;font-size:12px;font-weight:500;color:rgba(255,255,255,.45);border:none;background:none;border-radius:9px;cursor:pointer;transition:.3s}
+.tab.active{background:rgba(255,255,255,.12);color:#fff}
+
+/* ===== CARD BASE — always dark, readable ===== */
+.card-base{background:rgba(10,15,30,.75);border-radius:20px;padding:20px;margin-bottom:14px;backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);transition:border-color .4s}
+
+/* ===== GUARD CHECK ===== */
+.guard-card{text-align:center;padding:22px 20px}
+.guard-q{font-size:15px;color:#f0f0f5;margin-bottom:16px;line-height:1.6;font-weight:500}
+.guard-slider-wrap{position:relative;padding:0 8px}
+.guard-slider{-webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:4px;background:linear-gradient(to right,#4a5a8a,#8888aa,#ffcc80);outline:none;cursor:pointer}
+.guard-slider::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.3);cursor:grab}
+.guard-labels{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.4);margin-top:8px}
+.guard-feel{margin-top:14px;font-size:12px;color:rgba(255,255,255,.5);transition:color .3s}
+
+/* ===== MOOD ===== */
+.card-label{font-size:11px;color:rgba(255,255,255,.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+.mood-row{display:flex;gap:8px}
+.mood-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;background:rgba(255,255,255,.06);border:2px solid transparent;border-radius:14px;cursor:pointer;transition:.25s}
 .mood-btn:active{transform:scale(.95)}
-.mood-btn .emoji{font-size:20px}.mood-btn .label{font-size:9px;color:var(--text2);white-space:nowrap}
-.mood-btn.sel{box-shadow:0 0 16px rgba(0,212,255,.1)}
-.mood-btn[data-v="5"].sel{border-color:var(--m5);background:rgba(0,229,160,.08)}.mood-btn[data-v="5"].sel .label{color:var(--m5)}
-.mood-btn[data-v="4"].sel{border-color:var(--m4);background:rgba(0,212,255,.08)}.mood-btn[data-v="4"].sel .label{color:var(--m4)}
-.mood-btn[data-v="3"].sel{border-color:var(--m3);background:rgba(160,160,192,.08)}.mood-btn[data-v="3"].sel .label{color:var(--m3)}
-.mood-btn[data-v="2"].sel{border-color:var(--m2);background:rgba(255,157,92,.08)}.mood-btn[data-v="2"].sel .label{color:var(--m2)}
-.mood-btn[data-v="1"].sel{border-color:var(--m1);background:rgba(255,107,157,.08)}.mood-btn[data-v="1"].sel .label{color:var(--m1)}
+.mood-btn .m-emoji{font-size:22px}
+.mood-btn .m-label{font-size:9px;color:rgba(255,255,255,.45);white-space:nowrap}
+.mood-btn.sel{box-shadow:0 0 20px rgba(255,255,255,.05)}
+.mood-btn[data-m="4"].sel{border-color:#FFD700;background:rgba(255,215,0,.1)}.mood-btn[data-m="4"].sel .m-label{color:#FFD700}
+.mood-btn[data-m="3"].sel{border-color:#FF6B6B;background:rgba(255,107,107,.08)}.mood-btn[data-m="3"].sel .m-label{color:#FF6B6B}
+.mood-btn[data-m="2"].sel{border-color:#66BB6A;background:rgba(102,187,106,.08)}.mood-btn[data-m="2"].sel .m-label{color:#66BB6A}
+.mood-btn[data-m="1"].sel{border-color:#5C9CE6;background:rgba(92,156,230,.08)}.mood-btn[data-m="1"].sel .m-label{color:#5C9CE6}
 
-.tri-row{display:flex;gap:8px}
-.tri-btn{flex:1;padding:12px 6px;text-align:center;background:var(--surface2);border:2px solid transparent;border-radius:12px;cursor:pointer;transition:.25s;font-size:12px;color:var(--text2);line-height:1.4}
-.tri-btn:active{transform:scale(.97)}
-.tri-btn .t-icon{font-size:18px;display:block;margin-bottom:4px}
-.tri-btn.sel-green{border-color:var(--m5);background:rgba(0,229,160,.08);color:var(--m5)}
-.tri-btn.sel-gray{border-color:var(--m3);background:rgba(160,160,192,.08);color:var(--m3)}
-.tri-btn.sel-purple{border-color:var(--accent2);background:rgba(123,97,255,.08);color:var(--accent2)}
-.tri-btn.sel-pink{border-color:var(--m1);background:rgba(255,107,157,.08);color:var(--m1)}
-.tri-btn.sel-orange{border-color:var(--m2);background:rgba(255,157,92,.08);color:var(--m2)}
+/* ===== COLOR SLIDER ===== */
+.color-card{display:none}
+.color-card.show{display:block;animation:fadeUp .3s ease}
+.color-hint{font-size:11px;color:rgba(255,255,255,.4);text-align:center;margin-bottom:14px}
+.spectrum{position:relative;height:44px;border-radius:22px;cursor:pointer;touch-action:none}
+.spectrum-thumb{position:absolute;top:50%;width:32px;height:32px;border-radius:50%;border:3px solid #fff;transform:translate(-50%,-50%);box-shadow:0 2px 10px rgba(0,0,0,.3);cursor:grab;transition:background .1s}
+.color-preview{height:44px;border-radius:12px;margin-top:12px;display:flex;align-items:center;justify-content:center;font-size:11px;transition:background .15s}
 
-.bin-row{display:flex;gap:10px}
-.bin-btn{flex:1;padding:14px 8px;text-align:center;background:var(--surface2);border:2px solid transparent;border-radius:12px;cursor:pointer;transition:.25s;font-size:13px;color:var(--text2)}
-.bin-btn:active{transform:scale(.97)}
-.bin-btn.sel-yes{border-color:var(--m2);background:rgba(255,157,92,.08);color:var(--m2)}
-.bin-btn.sel-no{border-color:var(--m5);background:rgba(0,229,160,.08);color:var(--m5)}
+/* ===== TEXT ===== */
+.text-card textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px;color:#f0f0f5;font-family:'Zen Kaku Gothic New',sans-serif;font-size:15px;line-height:1.8;resize:none;outline:none;min-height:70px;transition:border-color .3s}
+.text-card textarea:focus{border-color:rgba(255,255,255,.2)}
+.text-card textarea::placeholder{color:rgba(255,255,255,.2)}
 
+.good-card{background:rgba(10,15,30,.75);border-radius:16px;backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.good-card .g-icon{font-size:18px;flex-shrink:0}
+.good-card input{flex:1;background:transparent;border:none;color:#f0f0f5;font-family:'Zen Kaku Gothic New',sans-serif;font-size:13px;outline:none}
+.good-card input::placeholder{color:rgba(255,255,255,.18)}
 
+.save-btn{width:100%;padding:16px;background:linear-gradient(135deg,#FFD700,#FF6B6B,#7b61ff);border:none;border-radius:14px;color:#fff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 20px rgba(255,107,107,.15);margin-bottom:12px;transition:.2s;opacity:.4}
+.save-btn.ready{opacity:1}
+.save-btn:active{transform:scale(.97)}
 
-textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;color:var(--text);font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;line-height:1.7;resize:none;outline:none;transition:border-color .3s}
-textarea:focus{border-color:rgba(0,212,255,.4)}
-textarea::placeholder{color:rgba(136,136,170,.5)}
-
-.sub-btn{width:100%;padding:16px;background:var(--gradient1);border:none;border-radius:12px;color:#fff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:.3s;box-shadow:0 4px 24px rgba(0,212,255,.2);margin-top:8px}
-.sub-btn:active{transform:scale(.97)}
-.sub-btn:disabled{opacity:.4;cursor:not-allowed}
-
-.reflect-btn{width:100%;padding:14px;background:var(--surface);border:1px solid rgba(123,97,255,.3);border-radius:12px;color:var(--accent2);font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:.3s;margin-top:12px}
+.reflect-btn{width:100%;padding:13px;background:rgba(10,15,30,.6);border:1px solid rgba(123,97,255,.25);border-radius:12px;color:#7b61ff;font-size:13px;cursor:pointer;margin-bottom:16px;text-align:center;backdrop-filter:blur(16px)}
 .reflect-btn:active{transform:scale(.97)}
 
-.reflect-panel{background:var(--surface);border:1px solid rgba(123,97,255,.2);border-radius:var(--radius);padding:18px;margin-top:14px;display:none}
+/* Reflect panel */
+.reflect-panel{background:rgba(10,15,30,.85);border:1px solid rgba(123,97,255,.2);border-radius:20px;padding:18px;margin-bottom:16px;display:none;backdrop-filter:blur(20px)}
 .reflect-panel.show{display:block;animation:fadeUp .3s ease}
+.ref-date-row{display:flex;gap:8px;margin-bottom:14px}
+.ref-date-btn{flex:1;padding:10px;text-align:center;background:rgba(255,255,255,.06);border:2px solid transparent;border-radius:10px;font-size:12px;color:rgba(255,255,255,.45);cursor:pointer;font-family:'Zen Kaku Gothic New',sans-serif}
+.ref-date-btn.sel{border-color:#7b61ff;color:#7b61ff;background:rgba(123,97,255,.08)}
+.ref-result-row{display:flex;gap:8px;margin-bottom:14px}
+.ref-res-btn{flex:1;padding:12px 6px;text-align:center;background:rgba(255,255,255,.06);border:2px solid transparent;border-radius:12px;cursor:pointer;font-size:12px;color:rgba(255,255,255,.45);transition:.2s}
+.ref-res-btn:active{transform:scale(.97)}
+.ref-res-btn .r-emoji{font-size:20px;display:block;margin-bottom:4px}
+.ref-res-btn.sel-good{border-color:#66BB6A;color:#66BB6A;background:rgba(102,187,106,.08)}
+.ref-res-btn.sel-mid{border-color:#aaa;color:#aaa;background:rgba(170,170,170,.08)}
+.ref-res-btn.sel-bad{border-color:#5C9CE6;color:#5C9CE6;background:rgba(92,156,230,.08)}
+.reflect-panel textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px;color:#f0f0f5;font-family:'Zen Kaku Gothic New',sans-serif;font-size:13px;line-height:1.6;resize:none;outline:none;margin-bottom:12px}
+.reflect-panel textarea:focus{border-color:rgba(255,255,255,.2)}
+.reflect-panel textarea::placeholder{color:rgba(255,255,255,.18)}
+.ref-save{width:100%;padding:14px;background:linear-gradient(135deg,#7b61ff,#5C9CE6);border:none;border-radius:12px;color:#fff;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;letter-spacing:1px;cursor:pointer}
 
-/* Date toggle for reflect */
-.date-toggle{display:flex;gap:8px;margin-bottom:14px}
-.date-toggle button{flex:1;padding:10px;text-align:center;background:var(--surface2);border:2px solid transparent;border-radius:10px;font-size:12px;color:var(--text2);cursor:pointer;transition:.25s;font-family:'Zen Kaku Gothic New',sans-serif}
-.date-toggle button:active{transform:scale(.97)}
-.date-toggle button.sel-purple{border-color:var(--accent2);background:rgba(123,97,255,.08);color:var(--accent2)}
+/* Today mix */
+.today-mix{display:none}
+.today-mix.show{display:block;animation:fadeUp .3s ease}
+.mix-label{font-size:11px;color:rgba(255,255,255,.45);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.mix-color{height:64px;border-radius:14px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;font-size:12px;transition:background .4s}
+.drops{display:flex;gap:6px;flex-wrap:wrap}
+.drop{width:22px;height:22px;border-radius:50%;border:1px solid rgba(255,255,255,.1)}
+.drop-info{font-size:10px;color:rgba(255,255,255,.3);margin-top:6px}
 
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--surface);border:1px solid rgba(0,229,160,.3);color:#00e5a0;padding:14px 28px;border-radius:40px;font-size:13px;font-weight:500;z-index:100;transition:transform .4s cubic-bezier(.16,1,.3,1);pointer-events:none}
+/* Toast */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(10,15,30,.9);border:1px solid rgba(102,187,106,.3);color:#66BB6A;padding:12px 24px;border-radius:30px;font-size:13px;z-index:100;transition:transform .4s cubic-bezier(.16,1,.3,1);pointer-events:none;backdrop-filter:blur(16px)}
 .toast.show{transform:translateX(-50%) translateY(0)}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
-/* PIXELS */
-.px-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:14px}
-.px-nav button{background:var(--surface);border:1px solid var(--border);color:var(--text2);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:.2s}
-.px-nav button:active{transform:scale(.9)}
-.px-nav .yr{font-family:'Outfit',sans-serif;font-size:20px;font-weight:700;color:var(--text);letter-spacing:1px}
-.legend{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
-.legend-i{display:flex;align-items:center;gap:4px}
-.legend-c{width:12px;height:12px;border-radius:3px}
-.legend-t{font-size:9px;color:var(--text2)}
-.px-wrap{background:var(--surface);border-radius:var(--radius);padding:14px;border:1px solid var(--border);margin-bottom:16px;overflow-x:auto}
-.ml{display:grid;grid-template-columns:24px repeat(12,1fr);gap:2px;margin-bottom:3px}
-.ml span{font-size:8px;color:var(--text2);text-align:center;font-weight:500}
-.pg{display:grid;grid-template-columns:24px repeat(12,1fr);gap:2px}
-.dl{font-size:8px;color:var(--text2);display:flex;align-items:center;font-weight:500}
-.px{aspect-ratio:1;border-radius:3px;background:var(--surface2);cursor:pointer;transition:.15s;position:relative;min-width:0}
-.px:hover{transform:scale(1.3);z-index:2}
-.px.fu{opacity:.3;cursor:default}.px.fu:hover{transform:none}
-.px[data-m="5"]{background:var(--m5)}.px[data-m="4"]{background:var(--m4)}
-.px[data-m="3"]{background:var(--m3)}.px[data-m="2"]{background:var(--m2)}.px[data-m="1"]{background:var(--m1)}
-.ptt{display:none;position:fixed;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--text);z-index:50;max-width:240px;box-shadow:0 8px 32px rgba(0,0,0,.5);pointer-events:none}
-.ptt.show{display:block}
+/* ===== CALENDAR ===== */
+.cal-container{display:none}
+.cal-container.show{display:block;animation:fadeUp .3s ease}
+.cal-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:14px}
+.cal-nav button{background:rgba(10,15,30,.7);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(12px);color:rgba(255,255,255,.6);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+.cal-nav button:active{transform:scale(.9)}
+.cal-nav .cal-yr{font-family:'Outfit',sans-serif;font-size:18px;font-weight:700;letter-spacing:1px}
+.cal-header{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
+.cal-header span{font-size:9px;color:rgba(255,255,255,.5);text-align:center}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:16px}
+.cal-day{aspect-ratio:1;border-radius:6px;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;transition:background .3s}
+.cal-day .dn{font-size:9px;color:rgba(255,255,255,.4)}
+.cal-day.has .dn{color:rgba(255,255,255,.8)}
+.cal-day.today{border:2px solid #7b61ff}
+.cal-day.future{opacity:.3}
+.cal-stats{display:flex;gap:8px;margin-bottom:16px}
+.cal-stat{flex:1;background:rgba(10,15,30,.7);border-radius:12px;backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08);padding:12px 8px;text-align:center}
+.cal-stat .sn{font-family:'Outfit',sans-serif;font-size:18px;font-weight:700;color:#fff}
+.cal-stat .sl{font-size:9px;color:rgba(255,255,255,.4);margin-top:2px}
+.cal-day.has{cursor:pointer}
+.cal-day.sel-day{outline:2px solid #FFD700;outline-offset:-2px}
 
-/* Stats */
-.stats{display:flex;gap:8px;margin-bottom:16px}
-.sc{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center}
-.sc .n{font-family:'Outfit',sans-serif;font-size:18px;font-weight:700;background:var(--gradient1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.sc .d{font-size:9px;color:var(--text2);margin-top:2px}
+/* Day detail popup */
+.day-detail{background:rgba(10,15,30,.9);border-radius:16px;backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.12);padding:16px;margin-bottom:16px;display:none;animation:fadeUp .3s ease}
+.day-detail.show{display:block}
+.day-detail-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.day-detail-date{font-size:13px;font-weight:600;color:#fff}
+.day-detail-close{background:none;border:none;color:rgba(255,255,255,.4);font-size:16px;cursor:pointer;padding:4px 8px}
+.day-detail-entries{display:flex;flex-direction:column;gap:8px}
+.dd-entry{display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(255,255,255,.05);border-radius:10px}
+.dd-color{width:14px;height:14px;border-radius:50%;flex-shrink:0;border:1px solid rgba(255,255,255,.1)}
+.dd-info{flex:1;font-size:12px;color:rgba(255,255,255,.7)}
+.dd-time{font-size:10px;color:rgba(255,255,255,.3)}
+.dd-text{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
+.dd-none{font-size:12px;color:rgba(255,255,255,.3);text-align:center;padding:12px}
 
-/* History */
-.log-e{background:var(--surface);border-radius:var(--radius);padding:16px;margin-bottom:12px;border:1px solid var(--border);border-left:3px solid var(--accent)}
-.log-e[data-m="5"]{border-left-color:var(--m5)}.log-e[data-m="4"]{border-left-color:var(--m4)}
-.log-e[data-m="3"]{border-left-color:var(--m3)}.log-e[data-m="2"]{border-left-color:var(--m2)}.log-e[data-m="1"]{border-left-color:var(--m1)}
-.log-h{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;flex-wrap:wrap;gap:6px}
-.log-d{font-size:11px;color:var(--text2)}
-.log-tags{display:flex;gap:4px;flex-wrap:wrap}
-.tag{font-size:9px;font-weight:600;padding:3px 8px;border-radius:16px;letter-spacing:.3px}
-.tag-m5{background:rgba(0,229,160,.12);color:var(--m5)}.tag-m4{background:rgba(0,212,255,.12);color:var(--m4)}
-.tag-m3{background:rgba(160,160,192,.12);color:var(--m3)}.tag-m2{background:rgba(255,157,92,.12);color:var(--m2)}.tag-m1{background:rgba(255,107,157,.12);color:var(--m1)}
-.tag-open{background:rgba(0,229,160,.1);color:var(--m5)}.tag-guarded{background:rgba(123,97,255,.1);color:var(--accent2)}.tag-neutral{background:rgba(160,160,192,.1);color:var(--m3)}
-.log-c p{font-size:12px;line-height:1.7;color:var(--text);margin-bottom:3px}
-.log-c .fl{font-size:9px;color:var(--text2);letter-spacing:1px;text-transform:uppercase;margin-top:8px;margin-bottom:3px}
-.log-del{background:none;border:none;color:var(--text2);font-size:10px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:.2s;margin-top:6px}
-.log-del:hover{color:var(--m1);background:rgba(255,107,157,.1)}
-.empty{text-align:center;padding:50px 20px;color:var(--text2)}
-.empty .ic{font-size:44px;margin-bottom:14px}
-.empty p{font-size:13px;line-height:1.8}
+/* Custom modal */
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
+.modal-overlay.show{display:flex}
+.modal-box{background:#1a1a2e;border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:24px;max-width:320px;width:100%;text-align:center}
+.modal-msg{font-size:14px;color:#f0f0f5;margin-bottom:20px;line-height:1.6}
+.modal-btns{display:flex;gap:10px}
+.modal-btn{flex:1;padding:12px;border:none;border-radius:10px;font-size:13px;font-family:'Zen Kaku Gothic New',sans-serif;cursor:pointer;font-weight:500}
+.modal-btn.cancel{background:rgba(255,255,255,.08);color:rgba(255,255,255,.6)}
+.modal-btn.ok{background:linear-gradient(135deg,#FF6B6B,#7b61ff);color:#fff}
+.modal-btn.single{background:rgba(255,255,255,.12);color:#fff}
+
+/* Mood breakdown */
+.mood-breakdown{background:rgba(10,15,30,.7);border-radius:14px;backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08);padding:14px 16px;margin-bottom:16px}
+.mood-breakdown .mb-title{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+.mb-bar{height:10px;border-radius:5px;display:flex;overflow:hidden;margin-bottom:10px;background:rgba(255,255,255,.04)}
+.mb-bar-seg{height:100%;transition:width .4s ease}
+.mb-legend{display:flex;flex-wrap:wrap;gap:6px 14px}
+.mb-item{display:flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,.6)}
+.mb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ===== HISTORY ===== */
+.hist-container{display:none}
+.hist-container.show{display:block;animation:fadeUp .3s ease}
+.h-stats{display:flex;gap:8px;margin-bottom:16px}
+.hs{flex:1;background:rgba(10,15,30,.7);border-radius:10px;backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08);padding:10px 6px;text-align:center}
+.hs .n{font-family:'Outfit',sans-serif;font-size:18px;font-weight:700;background:linear-gradient(135deg,#FFD700,#FF6B6B,#7b61ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hs .d{font-size:9px;color:rgba(255,255,255,.4);margin-top:2px}
 .exp-bar{display:flex;gap:10px;margin-bottom:16px}
-.exp-btn{flex:1;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text2);font-family:'Zen Kaku Gothic New',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:.2s}
+.exp-btn{flex:1;padding:12px;background:rgba(10,15,30,.7);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(12px);border-radius:10px;color:rgba(255,255,255,.5);font-size:12px;cursor:pointer}
 .exp-btn:active{transform:scale(.97)}
-.exp-btn:hover{border-color:rgba(0,212,255,.3);color:var(--accent)}
-.hidden{display:none}
+.entry{background:rgba(10,15,30,.75);border-radius:16px;backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08);padding:16px 18px;margin-bottom:10px}
+.entry-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.entry-time{font-size:11px;color:rgba(255,255,255,.35)}
+.entry-meta{display:flex;align-items:center;gap:6px}
+.entry-color{width:18px;height:18px;border-radius:50%;border:1px solid rgba(255,255,255,.1)}
+.entry-guard{font-size:9px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.06);padding:2px 8px;border-radius:10px}
+.entry-text{font-size:13px;color:rgba(255,255,255,.8);line-height:1.7}
+.entry-good{font-size:12px;color:#66BB6A;margin-top:8px;display:flex;align-items:center;gap:6px}
+.entry-del{background:none;border:none;color:rgba(255,255,255,.25);font-size:10px;cursor:pointer;margin-top:6px;padding:4px 8px;border-radius:6px}
+.reflect-entry{background:rgba(10,15,30,.75);border-radius:16px;backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08);padding:16px 18px;margin-bottom:10px;border-left:3px solid #7b61ff}
+.empty{text-align:center;padding:40px;color:rgba(255,255,255,.4)}
+.empty .ic{font-size:40px;margin-bottom:12px}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 </style>
+
 </head>
 <body>
-<div class="ctn">
-<div class="hdr"><h1>Unguard</h1><p>自分を知るための記録</p></div>
 
-<!-- Yesterday notice -->
-<div class="notice hidden" id="yd-notice" onclick="openReflectYesterday()">
-  <span class="n-icon">🌙</span>
-  <span class="n-text">昨日の振り返りがまだだよ</span>
-  <span class="n-close" onclick="event.stopPropagation();dismissNotice()">✕</span>
+<canvas id="star-canvas"></canvas>
+
+<div class="hdr">
+  <div class="celestial" id="celestial">
+    <span class="cel-icon" id="cel-icon">🌙</span>
+    <div class="sun-rays" id="sun-rays"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  </div>
+  <h1>Unguard</h1>
+  <p>構えを外す記録</p>
 </div>
 
 <div class="tabs">
-<button class="tab active" onclick="sw('input')">記録</button>
-<button class="tab" onclick="sw('pixels')">カレンダー</button>
-<button class="tab" onclick="sw('history')">履歴</button>
+  <button class="tab active" onclick="switchTab('record')">記録</button>
+  <button class="tab" onclick="switchTab('calendar')">カレンダー</button>
+  <button class="tab" onclick="switchTab('history')">履歴</button>
 </div>
 
-<!-- INPUT -->
-<div id="t-input">
+<!-- RECORD -->
 
-<div class="card"><div class="card-label">今の気分</div>
-<div class="mood-row">
-<button class="mood-btn" data-v="5" onclick="pick('mood',5)"><span class="emoji">🔥</span><span class="label">すごく良い</span></button>
-<button class="mood-btn" data-v="4" onclick="pick('mood',4)"><span class="emoji">☀️</span><span class="label">良い</span></button>
-<button class="mood-btn" data-v="3" onclick="pick('mood',3)"><span class="emoji">☁️</span><span class="label">普通</span></button>
-<button class="mood-btn" data-v="2" onclick="pick('mood',2)"><span class="emoji">🌧</span><span class="label">悪い</span></button>
-<button class="mood-btn" data-v="1" onclick="pick('mood',1)"><span class="emoji">⚡</span><span class="label">すごく悪い</span></button>
-</div></div>
+<div id="tab-record">
+  <div class="card-base guard-card" id="guard-card">
+    <div class="guard-q" id="guard-q"></div>
+    <div class="guard-slider-wrap">
+      <input type="range" class="guard-slider" id="guard-slider" min="0" max="100" value="50" oninput="updateGuard(this.value)">
+    </div>
+    <div class="guard-labels"><span>力入ってる</span><span>自然体</span></div>
+    <div class="guard-feel" id="guard-feel"></div>
+  </div>
 
-<div class="card"><div class="card-label">スタンス</div>
-<div class="tri-row">
-<button class="tri-btn" data-g="stance" data-v="open" onclick="pick('stance','open')"><span class="t-icon">🛡️→</span>開いてる</button>
-<button class="tri-btn" data-g="stance" data-v="neutral" onclick="pick('stance','neutral')"><span class="t-icon">―</span>どちらでもない</button>
-<button class="tri-btn" data-g="stance" data-v="guarded" onclick="pick('stance','guarded')"><span class="t-icon">🛡️</span>構えてる</button>
-</div></div>
+  <div class="card-base mood-card">
+    <div class="card-label">今の気分</div>
+    <div class="mood-row">
+      <button class="mood-btn" data-m="4" onclick="pickMood(4)"><span class="m-emoji">🥳</span><span class="m-label">元気！</span></button>
+      <button class="mood-btn" data-m="3" onclick="pickMood(3)"><span class="m-emoji">🙂</span><span class="m-label">ちょっと元気</span></button>
+      <button class="mood-btn" data-m="2" onclick="pickMood(2)"><span class="m-emoji">😐</span><span class="m-label">普通</span></button>
+      <button class="mood-btn" data-m="1" onclick="pickMood(1)"><span class="m-emoji">😢</span><span class="m-label">元気ない</span></button>
+    </div>
+  </div>
 
-<div class="card"><div class="card-label">今日の予感</div>
-<div class="tri-row">
-<button class="tri-btn" data-g="forecast" data-v="good" onclick="pick('forecast','good')"><span class="t-icon">✨</span>いいことありそう</button>
-<button class="tri-btn" data-g="forecast" data-v="neutral" onclick="pick('forecast','neutral')"><span class="t-icon">→</span>普通</button>
-<button class="tri-btn" data-g="forecast" data-v="bad" onclick="pick('forecast','bad')"><span class="t-icon">💭</span>嫌なことありそう</button>
-</div></div>
+  <div class="card-base color-card" id="color-card">
+    <div class="color-hint" id="color-hint"></div>
+    <div class="spectrum" id="spectrum">
+      <div class="spectrum-thumb" id="thumb"></div>
+    </div>
+    <div class="color-preview" id="color-preview"></div>
+  </div>
 
-<div class="card"><div class="card-label">体の調子</div>
-<div class="tri-row">
-<button class="tri-btn" data-g="body" data-v="good" onclick="pick('body','good')"><span class="t-icon">💪</span>好調</button>
-<button class="tri-btn" data-g="body" data-v="normal" onclick="pick('body','normal')"><span class="t-icon">🙂</span>普通</button>
-<button class="tri-btn" data-g="body" data-v="pain" onclick="pick('body','pain')"><span class="t-icon">🤕</span>どこか痛い</button>
-</div></div>
+  <div class="card-base text-card">
+    <textarea id="f-text" placeholder="今、なにを思ってる？" rows="3"></textarea>
+  </div>
 
-<div class="card"><div class="card-label">外からの干渉</div>
-<div class="bin-row">
-<button class="bin-btn" data-g="ext" data-v="yes" onclick="pick('ext','yes')">あった</button>
-<button class="bin-btn" data-g="ext" data-v="no" onclick="pick('ext','no')">なかった</button>
-</div></div>
+  <div class="good-card">
+    <span class="g-icon">✨</span>
+    <input id="f-good" placeholder="ちょっとしたいいこと">
+  </div>
 
-<div class="card"><div class="card-label">何があった？ <span class="opt">（任意）</span></div>
-<textarea id="f-event" rows="2" placeholder="出来事を自由に"></textarea></div>
-
-<div class="card"><div class="card-label">どう感じた？どう反応した？ <span class="opt">（任意）</span></div>
-<textarea id="f-reaction" rows="2" placeholder="そのとき思ったこと、やったこと"></textarea></div>
-
-
-
-<div class="card"><div class="card-label">今日マシだったこと <span class="opt">（任意）</span></div>
-<textarea id="f-good" rows="2" placeholder="小さいことでもOK"></textarea></div>
-
-<button class="sub-btn" id="save-btn" onclick="save()" disabled>SAVE</button>
+<button class="save-btn" id="save-btn" onclick="saveEntry()">SAVE</button>
 
 <button class="reflect-btn" onclick="toggleReflect()">🌙 振り返りを書く</button>
-<div class="reflect-panel" id="reflect-panel">
-<div class="card-label" style="margin-bottom:10px">いつの振り返り？</div>
-<div class="date-toggle">
-<button id="ref-today" class="sel-purple" onclick="pickRefDate('today')">今日</button>
-<button id="ref-yesterday" onclick="pickRefDate('yesterday')">昨日</button>
-</div>
-<div class="card" style="margin-bottom:12px"><div class="card-label">実際どうだった？</div>
-<div class="tri-row">
-<button class="tri-btn" data-g="actual" data-v="good" onclick="pick('actual','good')"><span class="t-icon">😊</span>良かった</button>
-<button class="tri-btn" data-g="actual" data-v="neutral" onclick="pick('actual','neutral')"><span class="t-icon">😐</span>普通だった</button>
-<button class="tri-btn" data-g="actual" data-v="bad" onclick="pick('actual','bad')"><span class="t-icon">😮‍💨</span>悪かった</button>
-</div></div>
-<div class="card" style="margin-bottom:0"><div class="card-label">振り返りメモ <span class="opt">（任意）</span></div>
-<textarea id="f-reflect" rows="2" placeholder="予感と比べてどうだった？"></textarea></div>
-<button class="sub-btn" style="margin-top:14px" onclick="saveReflect()">振り返りを保存</button>
-</div>
+
+  <div class="reflect-panel" id="reflect-panel">
+    <div class="card-label">いつの振り返り？</div>
+    <div class="ref-date-row">
+      <button class="ref-date-btn sel" id="ref-today" onclick="pickRefDate('today')">今日</button>
+      <button class="ref-date-btn" id="ref-yesterday" onclick="pickRefDate('yesterday')">昨日</button>
+    </div>
+    <div class="card-label">実際どうだった？</div>
+    <div class="ref-result-row">
+      <button class="ref-res-btn" data-r="good" onclick="pickRefResult('good')"><span class="r-emoji">😊</span>良かった</button>
+      <button class="ref-res-btn" data-r="mid" onclick="pickRefResult('mid')"><span class="r-emoji">😐</span>普通</button>
+      <button class="ref-res-btn" data-r="bad" onclick="pickRefResult('bad')"><span class="r-emoji">😮‍💨</span>悪かった</button>
+    </div>
+    <textarea placeholder="振り返りメモ（任意）" id="f-reflect" rows="2"></textarea>
+    <button class="ref-save" onclick="saveReflect()">振り返りを保存</button>
+  </div>
+
+  <div class="card-base today-mix" id="today-mix">
+    <div class="mix-label">今日の色</div>
+    <div class="mix-color" id="mix-color">まだ色がないよ</div>
+    <div class="drops" id="drops"></div>
+    <div class="drop-info" id="drop-info"></div>
+  </div>
 </div>
 
-<!-- PIXELS -->
-<div id="t-pixels" class="hidden">
-<div class="px-nav">
-<button onclick="chYr(-1)">◀</button>
-<span class="yr" id="px-yr">2026</span>
-<button onclick="chYr(1)">▶</button>
-</div>
-<div class="legend">
-<div class="legend-i"><div class="legend-c" style="background:var(--m5)"></div><span class="legend-t">すごく良い</span></div>
-<div class="legend-i"><div class="legend-c" style="background:var(--m4)"></div><span class="legend-t">良い</span></div>
-<div class="legend-i"><div class="legend-c" style="background:var(--m3)"></div><span class="legend-t">普通</span></div>
-<div class="legend-i"><div class="legend-c" style="background:var(--m2)"></div><span class="legend-t">悪い</span></div>
-<div class="legend-i"><div class="legend-c" style="background:var(--m1)"></div><span class="legend-t">すごく悪い</span></div>
-</div>
-<div class="px-wrap"><div id="px-ctn"></div></div>
-<div class="stats" id="px-stats"></div>
+<!-- CALENDAR -->
+
+<div class="cal-container" id="tab-calendar">
+  <div class="cal-nav">
+    <button onclick="calNav(-1)">◀</button>
+    <span class="cal-yr" id="cal-label"></span>
+    <button onclick="calNav(1)">▶</button>
+  </div>
+  <div class="cal-header"><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span><span>日</span></div>
+  <div class="cal-grid" id="cal-grid"></div>
+  <div class="day-detail" id="day-detail">
+    <div class="day-detail-head">
+      <span class="day-detail-date" id="dd-date"></span>
+      <button class="day-detail-close" onclick="closeDayDetail()">✕</button>
+    </div>
+    <div class="day-detail-entries" id="dd-entries"></div>
+  </div>
+  <div class="cal-stats" id="cal-stats"></div>
+  <div class="mood-breakdown" id="mood-breakdown" style="display:none">
+    <div class="mb-title">気分の傾向</div>
+    <div class="mb-bar" id="mb-bar"></div>
+    <div class="mb-legend" id="mb-legend"></div>
+  </div>
 </div>
 
 <!-- HISTORY -->
-<div id="t-history" class="hidden">
-<div class="stats" id="h-stats"></div>
-<div class="exp-bar">
-<button class="exp-btn" onclick="exportCSV()">📄 CSV出力</button>
-<button class="exp-btn" onclick="clearAll()">🗑 全削除</button>
-</div>
-<div id="log-list"></div>
-</div>
+
+<div class="hist-container" id="tab-history">
+  <div class="h-stats" id="h-stats"></div>
+  <div class="exp-bar">
+    <button class="exp-btn" onclick="exportCSV()">📄 CSV出力</button>
+    <button class="exp-btn" onclick="clearAll()">🗑 全削除</button>
+  </div>
+  <div id="log-list"></div>
 </div>
 
 <div class="toast" id="toast">✓ 保存しました</div>
-<div class="ptt" id="tooltip"></div>
+<div class="modal-overlay" id="modal"><div class="modal-box"><div class="modal-msg" id="modal-msg"></div><div class="modal-btns" id="modal-btns"></div></div></div>
 
 <script>
-const ML={5:'すごく良い',4:'良い',3:'普通',2:'悪い',1:'すごく悪い'};
-const SL={open:'開いてる',guarded:'構えてる',neutral:'どちらでもない'};
-const FL={good:'いいことありそう',neutral:'普通',bad:'嫌なことありそう'};
-const BL={good:'好調',normal:'普通',pain:'どこか痛い'};
-const EL={yes:'あった',no:'なかった'};
-const AL={good:'良かった',neutral:'普通だった',bad:'悪かった'};
-const MJ=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+const QUESTIONS=['今、力入ってる？','素の自分でいられてる？','心、開いてる？','リラックスできてる？','今、自然体？'];
+const MOOD_LABELS={4:'元気！',3:'ちょっと元気',2:'普通',1:'元気ない'};
+const MOOD_RANGES={
+  4:{hint:'元気の色を選ぶ',stops:[{p:0,r:255,g:240,b:180},{p:.25,r:255,g:220,b:100},{p:.5,r:255,g:200,b:0},{p:.75,r:240,g:170,b:0},{p:1,r:200,g:140,b:0}],grad:'linear-gradient(to right,#FFF0B4,#FFDC64,#FFC800,#F0AA00,#C88C00)'},
+  3:{hint:'あたたかさの色を選ぶ',stops:[{p:0,r:255,g:200,b:200},{p:.25,r:255,g:160,b:170},{p:.5,r:255,g:107,b:107},{p:.75,r:220,g:70,b:90},{p:1,r:170,g:40,b:60}],grad:'linear-gradient(to right,#FFC8C8,#FFA0AA,#FF6B6B,#DC465A,#AA283C)'},
+  2:{hint:'穏やかさの色を選ぶ',stops:[{p:0,r:200,g:235,b:200},{p:.25,r:160,g:210,b:160},{p:.5,r:102,g:187,b:106},{p:.75,r:70,g:150,b:75},{p:1,r:40,g:110,b:50}],grad:'linear-gradient(to right,#C8EBC8,#A0D2A0,#66BB6A,#46964B,#286E32)'},
+  1:{hint:'今の冷たさの色を選ぶ',stops:[{p:0,r:200,g:220,b:245},{p:.25,r:150,g:190,b:230},{p:.5,r:92,g:156,b:230},{p:.75,r:60,g:110,b:190},{p:1,r:30,g:60,b:130}],grad:'linear-gradient(to right,#C8DCF5,#96BEE6,#5C9CE6,#3C6EBE,#1E3C82)'}
+};
 
-let sel={mood:null,stance:null,forecast:null,body:null,ext:null,actual:null};
-let pxYr=new Date().getFullYear();
-let refDate='today';
+let curMood=null,curColor=null,sliderPos=.5,guardVal=50,refDate='today',refResult=null;
+let calM=new Date().getMonth(),calY=new Date().getFullYear();
 
-function getLogs(){try{return JSON.parse(localStorage.getItem('innerlog4')||'[]')}catch{return[]}}
-function saveLogs(l){localStorage.setItem('innerlog4',JSON.stringify(l))}
+function getE(){try{return JSON.parse(localStorage.getItem('unguard2')||'[]')}catch{return[]}}
+function saveE(e){localStorage.setItem('unguard2',JSON.stringify(e))}
+function dk(d){return`${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`}
+function rgb(c){return`rgb(${c.r},${c.g},${c.b})`}
+function lum(c){return(c.r*299+c.g*587+c.b*114)/1000}
 
-// Date helpers
-function toDateKey(d){return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`}
-function getYesterday(){const d=new Date();d.setDate(d.getDate()-1);return d}
+// Guard question
+function initGuard(){
+  const q=QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)];
+  document.getElementById('guard-q').textContent=q;
+  updateGuard(50);
+}
 
-// Check yesterday's reflect
-function checkYesterdayReflect(){
-  const logs=getLogs();
-  const ydKey=toDateKey(getYesterday());
-  const hasYdLog=logs.some(l=>l.type==='log'&&toDateKey(new Date(l.date))===ydKey);
-  const hasYdReflect=logs.some(l=>l.type==='reflect'&&l.targetDate===ydKey);
-  const dismissed=sessionStorage.getItem('yd-dismissed');
-  if(hasYdLog&&!hasYdReflect&&!dismissed){
-    document.getElementById('yd-notice').classList.remove('hidden');
+function updateGuard(v){
+  guardVal=parseInt(v);
+  const feel=document.getElementById('guard-feel');
+  const t=guardVal/100; // 0=guarded, 1=open
+  
+  // Sky background — ONLY body changes
+  let bg;
+  if(t<0.5){
+    const p=t/0.5;
+    const r1=13,g1=27,b1=42;
+    const r2=80,g2=40,b2=80;
+    const rm=Math.round(r1+(r2-r1)*p);
+    const gm=Math.round(g1+(g2-g1)*p);
+    const bm=Math.round(b1+(b2-b1)*p);
+    const r3=20,g3=20,b3=50;
+    const r4=180,g4=100,b4=60;
+    const rb=Math.round(r3+(r4-r3)*p);
+    const gb=Math.round(g3+(g4-g3)*p);
+    const bb=Math.round(b3+(b4-b3)*p);
+    bg=`linear-gradient(180deg,rgb(${rm},${gm},${bm}) 0%,rgb(${rb},${gb},${bb}) 100%)`;
   } else {
-    document.getElementById('yd-notice').classList.add('hidden');
+    const p=(t-0.5)/0.5;
+    const r1=80,g1=40,b1=80;
+    const r2=100,g2=180,b2=240;
+    const rm=Math.round(r1+(r2-r1)*p);
+    const gm=Math.round(g1+(g2-g1)*p);
+    const bm=Math.round(b1+(b2-b1)*p);
+    const r3=180,g3=100,b3=60;
+    const r4=170,g4=210,b4=240;
+    const rb=Math.round(r3+(r4-r3)*p);
+    const gb=Math.round(g3+(g4-g3)*p);
+    const bb=Math.round(b3+(b4-b3)*p);
+    bg=`linear-gradient(180deg,rgb(${rm},${gm},${bm}) 0%,rgb(${rb},${gb},${bb}) 100%)`;
   }
-}
+  document.body.style.background=bg;
+  // html background matches top of gradient for overscroll
+  document.documentElement.style.background=t>0.7?'rgb(100,180,240)':'#0d1b2a';
 
-function dismissNotice(){
-  sessionStorage.setItem('yd-dismissed','1');
-  document.getElementById('yd-notice').classList.add('hidden');
-}
-
-function openReflectYesterday(){
-  sw('input');
-  document.getElementById('reflect-panel').classList.add('show');
-  pickRefDate('yesterday');
-  dismissNotice();
-  document.getElementById('reflect-panel').scrollIntoView({behavior:'smooth'});
-}
-
-// Selection
-function pick(g,v){
-  sel[g]=v;
-  if(g==='mood'){
-    document.querySelectorAll('.mood-btn').forEach(b=>b.classList.toggle('sel',parseInt(b.dataset.v)===v));
-  } else {
-    const cm={
-      stance:{open:'sel-green',neutral:'sel-gray',guarded:'sel-purple'},
-      forecast:{good:'sel-green',neutral:'sel-gray',bad:'sel-pink'},
-      body:{good:'sel-green',normal:'sel-gray',pain:'sel-orange'},
-      ext:{yes:'sel-yes',no:'sel-no'},
-      actual:{good:'sel-green',neutral:'sel-gray',bad:'sel-pink'}
-    };
-    const isB=g==='ext';
-    const btns=document.querySelectorAll((isB?'.bin-btn':'.tri-btn')+'[data-g="'+g+'"]');
-    btns.forEach(b=>{Object.values(cm[g]).forEach(c=>b.classList.remove(c));if(b.dataset.v===v)b.classList.add(cm[g][v])});
-  }
-  checkSave();
-}
-
-function checkSave(){document.getElementById('save-btn').disabled=!sel.mood}
-
-function pickRefDate(d){
-  refDate=d;
-  document.getElementById('ref-today').classList.toggle('sel-purple',d==='today');
-  document.getElementById('ref-yesterday').classList.toggle('sel-purple',d==='yesterday');
-}
-
-function save(){
-  if(!sel.mood)return;
-  const e={
-    id:Date.now(),date:new Date().toISOString(),type:'log',
-    targetDate:toDateKey(new Date()),
-    mood:sel.mood,stance:sel.stance||'neutral',
-    forecast:sel.forecast||'neutral',body:sel.body||'normal',ext:sel.ext||'no',
-    event:document.getElementById('f-event').value.trim(),
-    reaction:document.getElementById('f-reaction').value.trim(),
-    good:document.getElementById('f-good').value.trim()
-  };
-  const logs=getLogs();logs.unshift(e);saveLogs(logs);
-  resetForm();showToast();
-}
-
-function saveReflect(){
-  const target=refDate==='yesterday'?getYesterday():new Date();
-  const e={
-    id:Date.now(),date:new Date().toISOString(),type:'reflect',
-    targetDate:toDateKey(target),
-    actual:sel.actual||'neutral',
-    reflectNote:document.getElementById('f-reflect').value.trim()
-  };
-  const logs=getLogs();logs.unshift(e);saveLogs(logs);
-  sel.actual=null;
-  document.querySelectorAll('.tri-btn[data-g="actual"]').forEach(b=>b.classList.remove('sel-green','sel-gray','sel-pink'));
-  document.getElementById('f-reflect').value='';
-  document.getElementById('reflect-panel').classList.remove('show');
-  pickRefDate('today');
-  showToast();checkYesterdayReflect();
-}
-
-function resetForm(){
-  sel={mood:null,stance:null,forecast:null,body:null,ext:null,actual:null};
-  document.querySelectorAll('.mood-btn,.tri-btn,.bin-btn').forEach(b=>{
-    b.classList.remove('sel','sel-green','sel-gray','sel-purple','sel-pink','sel-orange','sel-yes','sel-no');
+  // Card border glow hint based on guard — subtle ambient effect
+  const borderAlpha = 0.08 + t * 0.07;
+  document.querySelectorAll('.card-base').forEach(el=>{
+    el.style.borderColor=`rgba(255,255,255,${borderAlpha.toFixed(2)})`;
   });
-  document.querySelectorAll('#t-input textarea').forEach(t=>t.value='');
-  checkSave();
-  document.getElementById('reflect-panel').classList.remove('show');
-  pickRefDate('today');
+
+  // === Moon → Sun transition ===
+  const ci=document.getElementById('cel-icon');
+  const sr=document.getElementById('sun-rays');
+  
+  if(t<0.25){
+    ci.textContent='🌙';sr.style.opacity='0';
+  } else if(t<0.45){
+    ci.textContent='🌓';sr.style.opacity='0';
+  } else if(t<0.6){
+    ci.textContent='🌕';sr.style.opacity='0';
+  } else if(t<0.75){
+    ci.textContent='🌤️';sr.style.opacity='0.4';
+  } else {
+    ci.textContent='☀️';sr.style.opacity='0.8';
+  }
+
+  // === Stars ===
+  const canvas=document.getElementById('star-canvas');
+  canvas.style.opacity=String(Math.max(0,1-t*1.8));
+
+  // Feel text
+  if(guardVal<20){feel.textContent='ガチガチだね';feel.style.color='rgba(150,180,220,.8)'}
+  else if(guardVal<40){feel.textContent='ちょっと力入ってるかも';feel.style.color='rgba(180,160,200,.8)'}
+  else if(guardVal<60){feel.textContent='ぼちぼちだね';feel.style.color='rgba(255,200,150,.8)'}
+  else if(guardVal<80){feel.textContent='わりと自然体';feel.style.color='rgba(200,220,240,.8)'}
+  else{feel.textContent='開いてるね';feel.style.color='rgba(100,200,255,.8)'}
 }
 
+// Mood
+function pickMood(m){
+  curMood=m;
+  document.querySelectorAll('.mood-btn').forEach(b=>b.classList.toggle('sel',parseInt(b.dataset.m)===m));
+  const cc=document.getElementById('color-card');
+  cc.classList.add('show');
+  document.getElementById('color-hint').textContent=MOOD_RANGES[m].hint;
+  document.getElementById('spectrum').style.background=MOOD_RANGES[m].grad;
+  updateColor(sliderPos);
+  document.getElementById('save-btn').classList.add('ready');
+}
+
+// Color
+function lerp(stops,p){
+  p=Math.max(0,Math.min(1,p));let i=0;
+  for(let j=0;j<stops.length-1;j++){if(p>=stops[j].p&&p<=stops[j+1].p){i=j;break}}
+  const s=stops[i],e=stops[i+1],t=(p-s.p)/(e.p-s.p);
+  return{r:Math.round(s.r+(e.r-s.r)*t),g:Math.round(s.g+(e.g-s.g)*t),b:Math.round(s.b+(e.b-s.b)*t)};
+}
+
+function updateColor(p){
+  if(!curMood)return;
+  sliderPos=p;
+  const c=lerp(MOOD_RANGES[curMood].stops,p);
+  curColor=c;
+  document.getElementById('thumb').style.left=(p*100)+'%';
+  document.getElementById('thumb').style.background=rgb(c);
+  const pv=document.getElementById('color-preview');
+  pv.style.background=rgb(c);
+  pv.style.color=lum(c)>140?'rgba(0,0,0,.35)':'rgba(255,255,255,.4)';
+  pv.textContent='この色で記録する';
+}
+
+const spec=document.getElementById('spectrum');
+function gp(e){const r=spec.getBoundingClientRect();const x=(e.touches?e.touches[0].clientX:e.clientX)-r.left;return Math.max(0,Math.min(1,x/r.width))}
+spec.addEventListener('mousedown',e=>{updateColor(gp(e));sd()});
+spec.addEventListener('touchstart',e=>{e.preventDefault();updateColor(gp(e));sd()},{passive:false});
+function sd(){
+  const mv=e=>{e.preventDefault();updateColor(gp(e))};
+  const up=()=>{document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up);document.removeEventListener('touchmove',mv);document.removeEventListener('touchend',up)};
+  document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up);
+  document.addEventListener('touchmove',mv,{passive:false});document.addEventListener('touchend',up);
+}
+
+// Save
+function saveEntry(){
+  if(!curMood||!curColor)return;
+  let saveDate,saveDateKey;
+  if(overrideDate){
+    const parts=overrideDate.split('-');
+    saveDate=new Date(parseInt(parts[0]),parseInt(parts[1])-1,parseInt(parts[2]),12,0,0);
+    saveDateKey=overrideDate;
+  }else{
+    saveDate=new Date();
+    saveDateKey=dk(saveDate);
+  }
+  const e={id:Date.now(),date:saveDate.toISOString(),dateKey:saveDateKey,type:'log',mood:curMood,color:{...curColor},guard:guardVal,text:document.getElementById('f-text').value.trim(),good:document.getElementById('f-good').value.trim()};
+  const entries=getE();entries.unshift(e);saveE(entries);
+  document.getElementById('f-text').value='';document.getElementById('f-good').value='';
+  // Reset override
+  if(overrideDate){
+    overrideDate=null;
+    document.getElementById('save-btn').textContent='SAVE';
+  }
+  showTodayMix();showToast();
+}
+
+// Reflect
 function toggleReflect(){document.getElementById('reflect-panel').classList.toggle('show')}
+function pickRefDate(d){refDate=d;document.getElementById('ref-today').classList.toggle('sel',d==='today');document.getElementById('ref-yesterday').classList.toggle('sel',d==='yesterday')}
+function pickRefResult(r){
+  refResult=r;
+  document.querySelectorAll('.ref-res-btn').forEach(b=>{b.classList.remove('sel-good','sel-mid','sel-bad');if(b.dataset.r===r)b.classList.add('sel-'+({good:'good',mid:'mid',bad:'bad'}[r]))});
+}
+function saveReflect(){
+  const target=refDate==='yesterday'?new Date(Date.now()-86400000):new Date();
+  const e={id:Date.now(),date:new Date().toISOString(),dateKey:dk(target),type:'reflect',actual:refResult||'mid',note:document.getElementById('f-reflect').value.trim()};
+  const entries=getE();entries.unshift(e);saveE(entries);
+  document.getElementById('f-reflect').value='';refResult=null;
+  document.querySelectorAll('.ref-res-btn').forEach(b=>b.classList.remove('sel-good','sel-mid','sel-bad'));
+  document.getElementById('reflect-panel').classList.remove('show');
+  showToast();
+}
+
 function showToast(){const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
 
-function sw(tab){
-  document.querySelectorAll('.tab').forEach((t,i)=>{const ts=['input','pixels','history'];t.classList.toggle('active',ts[i]===tab)});
-  ['t-input','t-pixels','t-history'].forEach(id=>document.getElementById(id).classList.add('hidden'));
-  document.getElementById('t-'+tab).classList.remove('hidden');
-  if(tab==='pixels')renderPx();
-  if(tab==='history')renderHist();
+// Today mix
+function showTodayMix(){
+  const entries=getE().filter(e=>e.type==='log'&&e.dateKey===dk(new Date()));
+  const div=document.getElementById('today-mix');
+  if(!entries.length){div.classList.remove('show');return}
+  div.classList.add('show');
+  const avg={r:Math.round(entries.reduce((s,e)=>s+e.color.r,0)/entries.length),g:Math.round(entries.reduce((s,e)=>s+e.color.g,0)/entries.length),b:Math.round(entries.reduce((s,e)=>s+e.color.b,0)/entries.length)};
+  const mc=document.getElementById('mix-color');
+  mc.style.background=rgb(avg);mc.style.color=lum(avg)>140?'rgba(0,0,0,.3)':'rgba(255,255,255,.4)';mc.textContent=entries.length+'回分の色';
+  document.getElementById('drops').innerHTML=entries.map(e=>`<div class="drop" style="background:${rgb(e.color)}"></div>`).join('');
+  document.getElementById('drop-info').textContent=entries.length+'回記録した';
 }
 
-// ===== PIXELS =====
-function chYr(d){pxYr+=d;document.getElementById('px-yr').textContent=pxYr;renderPx()}
+// Tabs
+function switchTab(t){
+  document.querySelectorAll('.tab').forEach((b,i)=>{const ts=['record','calendar','history'];b.classList.toggle('active',ts[i]===t)});
+  document.getElementById('tab-record').style.display=t==='record'?'block':'none';
+  document.getElementById('tab-calendar').classList.toggle('show',t==='calendar');
+  document.getElementById('tab-history').classList.toggle('show',t==='history');
+  if(t==='calendar')renderCal();if(t==='history')renderHist();
+}
 
-function renderPx(){
-  const logs=getLogs().filter(l=>l.type==='log');
-  const today=new Date();
-  // Last entry per day wins (color = last recorded mood)
-  const dayMap={};
-  const sorted=[...logs].sort((a,b)=>new Date(a.date)-new Date(b.date));
-  sorted.forEach(l=>{const d=new Date(l.date);const k=`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;dayMap[k]=l});
+// Calendar
+function calNav(d){calM+=d;if(calM>11){calM=0;calY++}if(calM<0){calM=11;calY--}closeDayDetail();renderCal()}
+function mixForDay(key){
+  const entries=getE().filter(e=>e.type==='log'&&e.dateKey===key);
+  if(!entries.length)return null;
+  const avgG=entries.reduce((s,e)=>s+e.guard,0)/entries.length;
+  const darkFactor=0.7+avgG/100*0.3;
+  return{r:Math.round(entries.reduce((s,e)=>s+e.color.r,0)/entries.length*darkFactor),g:Math.round(entries.reduce((s,e)=>s+e.color.g,0)/entries.length*darkFactor),b:Math.round(entries.reduce((s,e)=>s+e.color.b,0)/entries.length*darkFactor),n:entries.length};
+}
 
-  let h='<div class="ml"><span></span>';
-  MJ.forEach(m=>{h+=`<span>${m}</span>`});
-  h+='</div><div class="pg">';
-  for(let day=1;day<=31;day++){
-    h+=`<div class="dl">${day}</div>`;
-    for(let mo=0;mo<12;mo++){
-      const dim=new Date(pxYr,mo+1,0).getDate();
-      if(day>dim){h+='<div class="px" style="visibility:hidden"></div>';continue}
-      const dt=new Date(pxYr,mo,day);
-      const k=`${pxYr}-${mo}-${day}`;
-      const entry=dayMap[k];
-      const isFu=dt>today;
-      const mA=entry?`data-m="${entry.mood}"`:'';
-      const ds=`${pxYr}/${mo+1}/${day}`;
-      const mL=entry?ML[entry.mood]:'記録なし';
-      const st=entry?(SL[entry.stance]||''):'';
-      const ev=entry?escA(entry.event||''):'';
-      h+=`<div class="px${isFu?' fu':''}" ${mA} data-ds="${ds}" data-ml="${mL}" data-st="${st}" data-ev="${ev}"
-        ontouchstart="showTT(event,this)" ontouchend="hideTT()" onmouseenter="showTT(event,this)" onmouseleave="hideTT()"></div>`;
-    }
+function showDayDetail(key,day){
+  const dd=document.getElementById('day-detail');
+  const entries=getE().filter(e=>e.dateKey===key);
+  document.getElementById('dd-date').textContent=`${calM+1}月${day}日の記録`;
+  
+  // Highlight selected day
+  document.querySelectorAll('.cal-day.sel-day').forEach(el=>el.classList.remove('sel-day'));
+  const sel=document.querySelector(`.cal-day[data-key="${key}"]`);
+  if(sel)sel.classList.add('sel-day');
+
+  // Don't allow future dates
+  const keyParts=key.split('-');
+  const keyDate=new Date(parseInt(keyParts[0]),parseInt(keyParts[1])-1,parseInt(keyParts[2]));
+  const today=new Date();today.setHours(23,59,59,999);
+  const isFuture=keyDate>today;
+  
+  const cont=document.getElementById('dd-entries');
+  let html='';
+  if(!entries.length){
+    html='<div class="dd-none">この日は記録がないよ</div>';
+  }else{
+    const ML={4:'🥳 元気！',3:'🙂 ちょっと元気',2:'😐 普通',1:'😢 元気ない'};
+    html=entries.map(e=>{
+      const d=new Date(e.date);
+      const tm=d.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+      if(e.type==='reflect'){
+        const rl={good:'😊 良かった',mid:'😐 普通',bad:'😮‍💨 悪かった'};
+        return`<div class="dd-entry"><div class="dd-color" style="background:#7b61ff"></div><div class="dd-info"><span class="dd-time">${tm}</span> 🌙 振り返り — ${rl[e.actual]||''}${e.note?`<div class="dd-text">${esc(e.note)}</div>`:''}</div></div>`;
+      }
+      return`<div class="dd-entry"><div class="dd-color" style="background:${rgb(e.color)}"></div><div class="dd-info"><span class="dd-time">${tm}</span> ${ML[e.mood]||''}${e.text?`<div class="dd-text">${esc(e.text)}</div>`:''}${e.good?`<div class="dd-text" style="color:#66BB6A">✨ ${esc(e.good)}</div>`:''}</div></div>`;
+    }).join('');
   }
-  h+='</div>';
-  document.getElementById('px-ctn').innerHTML=h;
-
-  const yl=logs.filter(l=>new Date(l.date).getFullYear()===pxYr);
-  const sEl=document.getElementById('px-stats');
-  if(yl.length){
-    const avg=(yl.reduce((s,l)=>s+l.mood,0)/yl.length).toFixed(1);
-    const days=new Set(yl.map(l=>new Date(l.date).toDateString())).size;
-    const op=new Set(yl.filter(l=>l.stance==='open').map(l=>new Date(l.date).toDateString())).size;
-    const gu=new Set(yl.filter(l=>l.stance==='guarded').map(l=>new Date(l.date).toDateString())).size;
-    sEl.innerHTML=`<div class="sc"><div class="n">${days}</div><div class="d">記録日</div></div>
-      <div class="sc"><div class="n">${avg}</div><div class="d">平均</div></div>
-      <div class="sc"><div class="n">${op}</div><div class="d">開いた日</div></div>
-      <div class="sc"><div class="n">${gu}</div><div class="d">構えた日</div></div>`;
-  } else sEl.innerHTML='';
+  if(!isFuture){
+    html+=`<button class="ref-save" style="margin-top:12px;font-size:12px;padding:10px" onclick="recordForDate('${key}')">📝 この日に記録する</button>`;
+  }
+  cont.innerHTML=html;
+  dd.classList.add('show');
 }
 
-function escA(s){return s.replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,' ')}
-
-function showTT(e,el){
-  if(el.classList.contains('fu'))return;
-  const tt=document.getElementById('tooltip');
-  let h=`<div class="td" style="color:var(--text2);font-size:10px;margin-bottom:4px">${el.dataset.ds}</div><div style="font-weight:600;margin-bottom:2px">${el.dataset.ml}</div>`;
-  if(el.dataset.st)h+=`<div style="font-size:11px;color:var(--text2);margin-top:2px">${el.dataset.st}</div>`;
-  if(el.dataset.ev)h+=`<div style="font-size:11px;margin-top:4px">${el.dataset.ev.substring(0,60)}${el.dataset.ev.length>60?'...':''}</div>`;
-  tt.innerHTML=h;tt.classList.add('show');
-  const r=el.getBoundingClientRect();
-  let left=r.left+r.width/2-120,top=r.top-tt.offsetHeight-8;
-  if(top<10)top=r.bottom+8;if(left<10)left=10;if(left+240>window.innerWidth)left=window.innerWidth-250;
-  tt.style.left=left+'px';tt.style.top=top+'px';
+let overrideDate=null;
+function recordForDate(key){
+  overrideDate=key;
+  closeDayDetail();
+  switchTab('record');
+  // Show indicator
+  const sb=document.getElementById('save-btn');
+  const parts=key.split('-');
+  sb.textContent=`${parts[1]}月${parts[2]}日として保存`;
+  showToast();
+  document.getElementById('toast').querySelector?.('span')?.remove();
+  // Scroll to top
+  window.scrollTo({top:0,behavior:'smooth'});
 }
-function hideTT(){document.getElementById('tooltip').classList.remove('show')}
+function closeDayDetail(){
+  document.getElementById('day-detail').classList.remove('show');
+  document.querySelectorAll('.cal-day.sel-day').forEach(el=>el.classList.remove('sel-day'));
+}
 
-// ===== HISTORY =====
+function renderCal(){
+  const MS=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  document.getElementById('cal-label').textContent=calY+'年 '+MS[calM];
+  const grid=document.getElementById('cal-grid');
+  const fd=new Date(calY,calM,1).getDay();
+  const off=fd===0?6:fd-1;
+  const dim=new Date(calY,calM+1,0).getDate();
+  const today=new Date(),todayK=dk(today);
+  let h='';
+  for(let i=0;i<off;i++)h+='<div class="cal-day"></div>';
+  for(let d=1;d<=dim;d++){
+    const key=`${calY}-${calM+1}-${d}`;
+    const dt=new Date(calY,calM,d);
+    const isFu=dt>today,isTo=key===todayK;
+    const mix=mixForDay(key);
+    let cls='cal-day';let sty='';
+    if(isTo)cls+=' today';if(isFu)cls+=' future';
+    if(mix){cls+=' has';sty=`background:${rgb(mix)}`}
+    h+=`<div class="${cls}" style="${sty}" onclick="showDayDetail('${key}',${d})" data-key="${key}"><span class="dn">${d}</span></div>`;
+  }
+  grid.innerHTML=h;
+  const entries=getE().filter(e=>{const d=new Date(e.date);return d.getFullYear()===calY&&d.getMonth()===calM&&e.type==='log'});
+  const st=document.getElementById('cal-stats');
+  if(entries.length){
+    const days=new Set(entries.map(e=>e.dateKey)).size;
+    st.innerHTML=`<div class="cal-stat"><div class="sn">${entries.length}</div><div class="sl">記録数</div></div><div class="cal-stat"><div class="sn">${days}</div><div class="sl">記録日</div></div>`;
+  }else st.innerHTML='';
+
+  // Mood breakdown
+  const mbd=document.getElementById('mood-breakdown');
+  const mbBar=document.getElementById('mb-bar');
+  const mbLeg=document.getElementById('mb-legend');
+  if(entries.length){
+    mbd.style.display='block';
+    const counts={4:0,3:0,2:0,1:0};
+    entries.forEach(e=>{if(counts[e.mood]!==undefined)counts[e.mood]++});
+    const total=entries.length;
+    const moodInfo=[
+      {m:4,emoji:'🥳',label:'元気！',color:'#FFD700'},
+      {m:3,emoji:'🙂',label:'ちょっと元気',color:'#FF6B6B'},
+      {m:2,emoji:'😐',label:'普通',color:'#66BB6A'},
+      {m:1,emoji:'😢',label:'元気ない',color:'#5C9CE6'}
+    ];
+    mbBar.innerHTML=moodInfo.filter(mi=>counts[mi.m]>0).map(mi=>`<div class="mb-bar-seg" style="width:${(counts[mi.m]/total*100).toFixed(1)}%;background:${mi.color}"></div>`).join('');
+    mbLeg.innerHTML=moodInfo.filter(mi=>counts[mi.m]>0).map(mi=>`<div class="mb-item"><div class="mb-dot" style="background:${mi.color}"></div>${mi.emoji} ${counts[mi.m]}回</div>`).join('');
+  }else{mbd.style.display='none'}
+}
+
+// History
 function renderHist(){
-  const logs=getLogs();
-  const list=document.getElementById('log-list');
-  const sEl=document.getElementById('h-stats');
-  const logE=logs.filter(l=>l.type==='log');
-  if(logE.length){
-    const avg=(logE.reduce((s,l)=>s+l.mood,0)/logE.length).toFixed(1);
-    const days=new Set(logE.map(l=>new Date(l.date).toLocaleDateString('ja-JP'))).size;
-    sEl.innerHTML=`<div class="sc"><div class="n">${logs.length}</div><div class="d">記録数</div></div>
-      <div class="sc"><div class="n">${days}</div><div class="d">記録日数</div></div>
-      <div class="sc"><div class="n">${avg}</div><div class="d">平均気分</div></div>`;
-  } else sEl.innerHTML='';
-
-  if(!logs.length){list.innerHTML='<div class="empty"><div class="ic">📝</div><p>まだ記録がありません<br>最初の一歩を踏み出そう</p></div>';return}
-
-  list.innerHTML=logs.map(l=>{
-    const d=new Date(l.date);
-    const ds=d.toLocaleDateString('ja-JP',{year:'numeric',month:'short',day:'numeric',weekday:'short'})+' '+d.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
-
-    if(l.type==='reflect'){
-      const tgtLabel=l.targetDate||'';
-      return `<div class="log-e" style="border-left-color:var(--accent2)">
-        <div class="log-h"><span class="log-d">${ds}</span><div class="log-tags"><span class="tag" style="background:rgba(123,97,255,.12);color:var(--accent2)">🌙 振り返り</span>
-        ${l.actual?`<span class="tag tag-m${l.actual==='good'?'5':l.actual==='bad'?'1':'3'}">${AL[l.actual]}</span>`:''}
-        ${tgtLabel?`<span class="tag tag-neutral">${tgtLabel}</span>`:''}</div></div>
-        <div class="log-c">${l.reflectNote?`<p>${escH(l.reflectNote)}</p>`:''}</div>
-        <button class="log-del" onclick="delLog(${l.id})">削除</button></div>`;
+  const entries=getE();const list=document.getElementById('log-list');const st=document.getElementById('h-stats');
+  const logs=entries.filter(e=>e.type==='log');
+  if(logs.length){
+    const days=new Set(logs.map(e=>e.dateKey)).size;
+    st.innerHTML=`<div class="hs"><div class="n">${entries.length}</div><div class="d">記録数</div></div><div class="hs"><div class="n">${days}</div><div class="d">記録日</div></div>`;
+  }else st.innerHTML='';
+  if(!entries.length){list.innerHTML='<div class="empty"><div class="ic">📝</div><p>まだ記録がないよ</p></div>';return}
+  list.innerHTML=entries.map(e=>{
+    const d=new Date(e.date);
+    const ds=d.toLocaleDateString('ja-JP',{month:'short',day:'numeric',weekday:'short'})+' '+d.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+    if(e.type==='reflect'){
+      const rl={good:'良かった',mid:'普通',bad:'悪かった'};
+      return`<div class="reflect-entry"><div class="entry-head"><span class="entry-time">${ds}</span><span style="font-size:10px;color:#7b61ff">🌙 振り返り（${e.dateKey}）</span></div>
+        <div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:4px">${rl[e.actual]||''}</div>
+        ${e.note?`<div class="entry-text">${esc(e.note)}</div>`:''}
+        <button class="entry-del" onclick="delE('${e.id}')">削除</button></div>`;
     }
-
-    const tags=[];
-    tags.push(`<span class="tag tag-m${l.mood}">${ML[l.mood]}</span>`);
-    if(l.stance&&l.stance!=='neutral')tags.push(`<span class="tag tag-${l.stance}">${SL[l.stance]}</span>`);
-    if(l.forecast&&l.forecast!=='neutral')tags.push(`<span class="tag" style="background:rgba(0,212,255,.08);color:var(--accent)">${FL[l.forecast]}</span>`);
-    if(l.body&&l.body!=='normal')tags.push(`<span class="tag" style="background:rgba(160,160,192,.08);color:var(--m3)">${BL[l.body]}</span>`);
-    if(l.ext==='yes')tags.push(`<span class="tag" style="background:rgba(255,157,92,.08);color:var(--m2)">外部干渉あり</span>`);
-
-    let c='';
-    if(l.event)c+=`<div class="fl">出来事</div><p>${escH(l.event)}</p>`;
-    if(l.reaction)c+=`<div class="fl">反応・感じたこと</div><p>${escH(l.reaction)}</p>`;
-    if(l.good)c+=`<div class="fl">マシだったこと</div><p>${escH(l.good)}</p>`;
-
-    return `<div class="log-e" data-m="${l.mood}">
-      <div class="log-h"><span class="log-d">${ds}</span><div class="log-tags">${tags.join('')}</div></div>
-      <div class="log-c">${c}</div>
-      <button class="log-del" onclick="delLog(${l.id})">削除</button></div>`;
+    const gLabel=e.guard<30?'力入ってる':e.guard<45?'ちょっと力入ってる':e.guard<55?'':e.guard<70?'わりと自然体':'開いてる';
+    return`<div class="entry"><div class="entry-head"><span class="entry-time">${ds}</span>
+      <div class="entry-meta"><div class="entry-color" style="background:${rgb(e.color)}"></div>${gLabel?`<span class="entry-guard">${gLabel}</span>`:''}</div></div>
+      ${e.text?`<div class="entry-text">${esc(e.text)}</div>`:''}
+      ${e.good?`<div class="entry-good">✨ ${esc(e.good)}</div>`:''}
+      <button class="entry-del" onclick="delE('${e.id}')">削除</button></div>`;
   }).join('');
 }
 
-function escH(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}
-function delLog(id){if(!confirm('この記録を削除しますか？'))return;saveLogs(getLogs().filter(l=>l.id!==id));renderHist()}
-function clearAll(){if(!confirm('すべての記録を削除しますか？'))return;if(!confirm('本当に？'))return;saveLogs([]);renderHist()}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}
 
-// ===== CSV EXPORT =====
-function exportCSV(){
-  const logs=getLogs();
-  if(!logs.length){alert('記録がありません');return}
-
-  // Group by targetDate
-  const dayData={};
-  logs.forEach(l=>{
-    const dk=l.targetDate||toDateKey(new Date(l.date));
-    if(!dayData[dk])dayData[dk]={logs:[],reflects:[]};
-    if(l.type==='reflect')dayData[dk].reflects.push(l);
-    else dayData[dk].logs.push(l);
-  });
-
-  const BOM='\uFEFF';
-  const hdr='日付,気分数値,気分,スタンス,予感,体調,外部干渉,出来事,反応,マシだったこと,実際どうだった,振り返りメモ';
-  const rows=[];
-  const sortedKeys=Object.keys(dayData).sort((a,b)=>{
-    const pa=a.split('-').map(Number),pb=b.split('-').map(Number);
-    return new Date(pb[0],pb[1]-1,pb[2])-new Date(pa[0],pa[1]-1,pa[2]);
-  });
-
-  sortedKeys.forEach(dk=>{
-    const dd=dayData[dk];
-    const lastLog=dd.logs.sort((a,b)=>new Date(b.date)-new Date(a.date))[0];
-    const lastRef=dd.reflects.sort((a,b)=>new Date(b.date)-new Date(a.date))[0];
-
-    rows.push([
-      dk,
-      lastLog?lastLog.mood:'',
-      lastLog?ML[lastLog.mood]:'',
-      lastLog?(SL[lastLog.stance]||''):'',
-      lastLog?(FL[lastLog.forecast]||''):'',
-      lastLog?(BL[lastLog.body]||''):'',
-      lastLog?(EL[lastLog.ext]||''):'',
-      lastLog?csvE(lastLog.event):'',
-      lastLog?csvE(lastLog.reaction):'',
-      lastLog?csvE(lastLog.good):'',
-      lastRef?(AL[lastRef.actual]||''):'',
-      lastRef?csvE(lastRef.reflectNote):''
-    ].join(','));
-  });
-
-  const csv=BOM+hdr+'\n'+rows.join('\n');
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download=`inner-log_${new Date().toISOString().slice(0,10)}.csv`;a.click();URL.revokeObjectURL(url);
+// Custom modal
+function showModal(msg,onOk,okLabel,cancelLabel){
+  const m=document.getElementById('modal');
+  document.getElementById('modal-msg').textContent=msg;
+  const btns=document.getElementById('modal-btns');
+  if(cancelLabel){
+    btns.innerHTML=`<button class="modal-btn cancel" id="m-cancel">${cancelLabel}</button><button class="modal-btn ok" id="m-ok">${okLabel||'OK'}</button>`;
+    document.getElementById('m-cancel').onclick=()=>{m.classList.remove('show')};
+    document.getElementById('m-ok').onclick=()=>{m.classList.remove('show');onOk()};
+  }else{
+    btns.innerHTML=`<button class="modal-btn single" id="m-ok">${okLabel||'OK'}</button>`;
+    document.getElementById('m-ok').onclick=()=>{m.classList.remove('show');if(onOk)onOk()};
+  }
+  m.classList.add('show');
 }
 
+function delE(id){
+  showModal('この記録を削除する？',()=>{
+    saveE(getE().filter(e=>String(e.id)!==String(id)));renderHist();
+  },'削除','やめる');
+}
+function clearAll(){
+  showModal('全部消す？ 元に戻せないよ',()=>{
+    saveE([]);renderHist();showToast();
+  },'全削除','やめる');
+}
+
+function exportCSV(){
+  const entries=getE();
+  if(!entries.length){showModal('記録がないよ',null,'OK');return}
+  const BOM='\uFEFF';
+  const hdr='日時,日付キー,タイプ,気分,色R,色G,色B,構え度,テキスト,いいこと,振り返り結果,振り返りメモ';
+  const rows=entries.map(e=>{
+    const d=new Date(e.date);
+    const ds=d.toLocaleDateString('ja-JP')+' '+d.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+    if(e.type==='reflect')return[ds,e.dateKey,'振り返り','','','','','','','',{good:'良かった',mid:'普通',bad:'悪かった'}[e.actual]||'',csvE(e.note)].join(',');
+    return[ds,e.dateKey,'記録',MOOD_LABELS[e.mood],e.color.r,e.color.g,e.color.b,e.guard,csvE(e.text),csvE(e.good),'',''].join(',');
+  });
+  const csv=BOM+hdr+'\n'+rows.join('\n');
+  // Try Blob download first
+  try{
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download=`unguard_${new Date().toISOString().slice(0,10)}.csv`;
+    a.style.display='none';
+    document.body.appendChild(a);a.click();
+    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url)},500);
+    showToast();
+  }catch(err){
+    // Fallback: copy to clipboard
+    navigator.clipboard.writeText(csv).then(()=>{
+      showModal('CSVをクリップボードにコピーしたよ。メモ帳などに貼り付けて保存してね',null,'OK');
+    }).catch(()=>{
+      showModal('エクスポートに失敗したよ。Vercelにデプロイしてから試してみて',null,'OK');
+    });
+  }
+}
 function csvE(s){if(!s)return'';return'"'+s.replace(/"/g,'""').replace(/\n/g,' ')+'"'}
 
+// Stars
+function initStars(){
+  const c=document.getElementById('star-canvas');
+  const ctx=c.getContext('2d');
+  c.width=window.innerWidth;c.height=window.innerHeight;
+  const stars=[];
+  for(let i=0;i<80;i++){
+    stars.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.5+0.3,a:Math.random()*0.6+0.2,speed:Math.random()*0.008+0.003,phase:Math.random()*Math.PI*2});
+  }
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    const now=Date.now()*0.001;
+    stars.forEach(s=>{
+      const twinkle=s.a*(0.5+0.5*Math.sin(now*s.speed*60+s.phase));
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,255,240,${twinkle})`;ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+  window.addEventListener('resize',()=>{c.width=window.innerWidth;c.height=window.innerHeight});
+}
+
 // Init
-checkYesterdayReflect();
+initGuard();initStars();showTodayMix();
 </script>
+
 </body>
 </html>
