@@ -14,7 +14,7 @@ body{font-family:'Zen Kaku Gothic New','Outfit',sans-serif;color:#f0f0f5;min-hei
 
 /* ===== STARS ===== */
 #star-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;transition:opacity 1s ease}
-body>*:not(#star-canvas){position:relative;z-index:1}
+body>*:not(#star-canvas):not(#sparkle-canvas){position:relative;z-index:1}
 
 /* ===== CELESTIAL ===== */
 .celestial{position:absolute;left:16px;top:4px;width:34px;height:34px;z-index:2;display:flex;align-items:center;justify-content:center}
@@ -51,10 +51,10 @@ body>*:not(#star-canvas){position:relative;z-index:1}
 .mood-btn .m-emoji{font-size:22px}
 .mood-btn .m-label{font-size:9px;color:rgba(255,255,255,.45);white-space:nowrap}
 .mood-btn.sel{box-shadow:0 0 20px rgba(255,255,255,.05)}
-.mood-btn[data-m="4"].sel{border-color:#FFD700;background:rgba(255,215,0,.1)}.mood-btn[data-m="4"].sel .m-label{color:#FFD700}
-.mood-btn[data-m="3"].sel{border-color:#FF6B6B;background:rgba(255,107,107,.08)}.mood-btn[data-m="3"].sel .m-label{color:#FF6B6B}
-.mood-btn[data-m="2"].sel{border-color:#66BB6A;background:rgba(102,187,106,.08)}.mood-btn[data-m="2"].sel .m-label{color:#66BB6A}
-.mood-btn[data-m="1"].sel{border-color:#5C9CE6;background:rgba(92,156,230,.08)}.mood-btn[data-m="1"].sel .m-label{color:#5C9CE6}
+.mood-btn[data-m="4"].sel{border-color:#FFD23C;background:rgba(255,210,60,.12)}.mood-btn[data-m="4"].sel .m-label{color:#FFD23C}
+.mood-btn[data-m="3"].sel{border-color:#FF7896;background:rgba(255,120,150,.1)}.mood-btn[data-m="3"].sel .m-label{color:#FF7896}
+.mood-btn[data-m="2"].sel{border-color:#BEAAE1;background:rgba(190,170,225,.12)}.mood-btn[data-m="2"].sel .m-label{color:#BEAAE1}
+.mood-btn[data-m="1"].sel{border-color:#6EAAFF;background:rgba(110,170,255,.1)}.mood-btn[data-m="1"].sel .m-label{color:#6EAAFF}
 
 /* ===== COLOR SLIDER ===== */
 .color-card{display:none}
@@ -62,7 +62,8 @@ body>*:not(#star-canvas){position:relative;z-index:1}
 .color-hint{font-size:11px;color:rgba(255,255,255,.4);text-align:center;margin-bottom:14px}
 .spectrum{position:relative;height:44px;border-radius:22px;cursor:pointer;touch-action:none}
 .spectrum-thumb{position:absolute;top:50%;width:32px;height:32px;border-radius:50%;border:3px solid #fff;transform:translate(-50%,-50%);box-shadow:0 2px 10px rgba(0,0,0,.3);cursor:grab;transition:background .1s}
-.color-preview{height:44px;border-radius:12px;margin-top:12px;display:flex;align-items:center;justify-content:center;font-size:11px;transition:background .15s}
+.color-preview{height:44px;border-radius:12px;margin-top:12px;display:flex;align-items:center;justify-content:center;font-size:11px;transition:background .15s;position:relative;overflow:hidden}
+.color-preview canvas,.mix-color canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 
 /* ===== TEXT ===== */
 .text-card textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px;color:#f0f0f5;font-family:'Zen Kaku Gothic New',sans-serif;font-size:15px;line-height:1.8;resize:none;outline:none;min-height:70px;transition:border-color .3s}
@@ -103,14 +104,17 @@ body>*:not(#star-canvas){position:relative;z-index:1}
 .today-mix{display:none}
 .today-mix.show{display:block;animation:fadeUp .3s ease}
 .mix-label{font-size:11px;color:rgba(255,255,255,.45);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
-.mix-color{height:64px;border-radius:14px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;font-size:12px;transition:background .4s}
+.mix-color{height:64px;border-radius:14px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;font-size:12px;transition:background .4s;position:relative;overflow:hidden}
 .drops{display:flex;gap:6px;flex-wrap:wrap}
 .drop{width:22px;height:22px;border-radius:50%;border:1px solid rgba(255,255,255,.1)}
 .drop-info{font-size:10px;color:rgba(255,255,255,.3);margin-top:6px}
 
 /* Toast */
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(10,15,30,.9);border:1px solid rgba(102,187,106,.3);color:#66BB6A;padding:12px 24px;border-radius:30px;font-size:13px;z-index:100;transition:transform .4s cubic-bezier(.16,1,.3,1);pointer-events:none;backdrop-filter:blur(16px)}
-.toast.show{transform:translateX(-50%) translateY(0)}
+.toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.8);background:rgba(10,15,30,.92);border:1px solid rgba(102,187,106,.4);color:#66BB6A;padding:18px 36px;border-radius:16px;font-size:16px;font-weight:600;z-index:200;opacity:0;transition:all .3s cubic-bezier(.16,1,.3,1);pointer-events:none;backdrop-filter:blur(20px);text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+
+/* Sparkle canvas */
+#sparkle-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;transition:opacity 0.6s ease}
 
 /* ===== CALENDAR ===== */
 .cal-container{display:none}
@@ -198,6 +202,7 @@ body>*:not(#star-canvas){position:relative;z-index:1}
 <body>
 
 <canvas id="star-canvas"></canvas>
+<canvas id="sparkle-canvas"></canvas>
 
 <div class="hdr">
   <div class="celestial" id="celestial">
@@ -241,7 +246,9 @@ body>*:not(#star-canvas){position:relative;z-index:1}
     <div class="spectrum" id="spectrum">
       <div class="spectrum-thumb" id="thumb"></div>
     </div>
-    <div class="color-preview" id="color-preview"></div>
+    <div class="guard-labels"><span id="color-label-l">ちょっと</span><span id="color-label-r">すごく</span></div>
+    <div class="guard-feel" id="color-feel" style="margin-top:8px"></div>
+    <div class="color-preview" id="color-preview"><canvas id="preview-glitter"></canvas><span id="preview-text" style="position:relative;z-index:1">この色で記録する</span></div>
   </div>
 
   <div class="card-base text-card">
@@ -275,7 +282,7 @@ body>*:not(#star-canvas){position:relative;z-index:1}
 
   <div class="card-base today-mix" id="today-mix">
     <div class="mix-label">今日の色</div>
-    <div class="mix-color" id="mix-color">まだ色がないよ</div>
+    <div class="mix-color" id="mix-color"><canvas id="mix-glitter"></canvas><span id="mix-text" style="position:relative;z-index:1">まだ色がないよ</span></div>
     <div class="drops" id="drops"></div>
     <div class="drop-info" id="drop-info"></div>
   </div>
@@ -324,10 +331,10 @@ body>*:not(#star-canvas){position:relative;z-index:1}
 const QUESTIONS=['今、力入ってる？','素の自分でいられてる？','心、開いてる？','リラックスできてる？','今、自然体？'];
 const MOOD_LABELS={4:'元気！',3:'ちょっと元気',2:'普通',1:'元気ない'};
 const MOOD_RANGES={
-  4:{hint:'元気の色を選ぶ',stops:[{p:0,r:255,g:240,b:180},{p:.25,r:255,g:220,b:100},{p:.5,r:255,g:200,b:0},{p:.75,r:240,g:170,b:0},{p:1,r:200,g:140,b:0}],grad:'linear-gradient(to right,#FFF0B4,#FFDC64,#FFC800,#F0AA00,#C88C00)'},
-  3:{hint:'あたたかさの色を選ぶ',stops:[{p:0,r:255,g:200,b:200},{p:.25,r:255,g:160,b:170},{p:.5,r:255,g:107,b:107},{p:.75,r:220,g:70,b:90},{p:1,r:170,g:40,b:60}],grad:'linear-gradient(to right,#FFC8C8,#FFA0AA,#FF6B6B,#DC465A,#AA283C)'},
-  2:{hint:'穏やかさの色を選ぶ',stops:[{p:0,r:200,g:235,b:200},{p:.25,r:160,g:210,b:160},{p:.5,r:102,g:187,b:106},{p:.75,r:70,g:150,b:75},{p:1,r:40,g:110,b:50}],grad:'linear-gradient(to right,#C8EBC8,#A0D2A0,#66BB6A,#46964B,#286E32)'},
-  1:{hint:'今の冷たさの色を選ぶ',stops:[{p:0,r:200,g:220,b:245},{p:.25,r:150,g:190,b:230},{p:.5,r:92,g:156,b:230},{p:.75,r:60,g:110,b:190},{p:1,r:30,g:60,b:130}],grad:'linear-gradient(to right,#C8DCF5,#96BEE6,#5C9CE6,#3C6EBE,#1E3C82)'}
+  4:{hint:'元気の色を選ぶ',stops:[{p:0,r:255,g:248,b:210},{p:.25,r:255,g:230,b:130},{p:.5,r:255,g:210,b:60},{p:.75,r:255,g:185,b:40},{p:1,r:255,g:160,b:20}],grad:'linear-gradient(to right,#FFF8D2,#FFE682,#FFD23C,#FFB928,#FFA014)'},
+  3:{hint:'あたたかさの色を選ぶ',stops:[{p:0,r:255,g:210,b:220},{p:.25,r:255,g:170,b:190},{p:.5,r:255,g:120,b:150},{p:.75,r:245,g:90,b:130},{p:1,r:230,g:60,b:110}],grad:'linear-gradient(to right,#FFD2DC,#FFAABE,#FF7896,#F55A82,#E63C6E)'},
+  2:{hint:'穏やかさの色を選ぶ',stops:[{p:0,r:230,g:220,b:245},{p:.25,r:210,g:195,b:235},{p:.5,r:190,g:170,b:225},{p:.75,r:170,g:150,b:215},{p:1,r:150,g:130,b:205}],grad:'linear-gradient(to right,#E6DCF5,#D2C3EB,#BEAAE1,#AA96D7,#9682CD)'},
+  1:{hint:'静けさの色を選ぶ',stops:[{p:0,r:210,g:230,b:255},{p:.25,r:160,g:200,b:255},{p:.5,r:110,g:170,b:255},{p:.75,r:80,g:140,b:240},{p:1,r:60,g:110,b:220}],grad:'linear-gradient(to right,#D2E6FF,#A0C8FF,#6EAAFF,#508CF0,#3C6EDC)'}
 };
 
 let curMood=null,curColor=null,sliderPos=.5,guardVal=50,refDate='today',refResult=null;
@@ -406,9 +413,13 @@ function updateGuard(v){
     ci.textContent='☀️';sr.style.opacity='0.8';
   }
 
-  // === Stars ===
+  // === Stars (night) ===
   const canvas=document.getElementById('star-canvas');
   canvas.style.opacity=String(Math.max(0,1-t*1.8));
+
+  // === Sparkles (openness) ===
+  const sparkle=document.getElementById('sparkle-canvas');
+  sparkle.style.opacity=String(Math.max(0,(t-0.3)/0.7));
 
   // Feel text
   if(guardVal<20){feel.textContent='ガチガチだね';feel.style.color='rgba(150,180,220,.8)'}
@@ -416,6 +427,15 @@ function updateGuard(v){
   else if(guardVal<60){feel.textContent='ぼちぼちだね';feel.style.color='rgba(255,200,150,.8)'}
   else if(guardVal<80){feel.textContent='わりと自然体';feel.style.color='rgba(200,220,240,.8)'}
   else{feel.textContent='開いてるね';feel.style.color='rgba(100,200,255,.8)'}
+
+  // Update preview glitter if color is selected
+  if(curColor){
+    setGlitter('preview-glitter',t>0.5?((t-0.5)/0.5):0);
+    const pv=document.getElementById('color-preview');
+    const display=applyGuardToColor(curColor,t);
+    pv.style.background=rgb(display);
+    pv.style.color=lum(display)>140?'rgba(0,0,0,.35)':'rgba(255,255,255,.4)';
+  }
 }
 
 // Mood
@@ -426,8 +446,15 @@ function pickMood(m){
   cc.classList.add('show');
   document.getElementById('color-hint').textContent=MOOD_RANGES[m].hint;
   document.getElementById('spectrum').style.background=MOOD_RANGES[m].grad;
+  // Update side labels per mood
+  const sideLabels={4:['ちょっと','めちゃくちゃ'],3:['ほんのり','すごく'],2:['ぼんやり','しっかり'],1:['ちょっと','かなり']};
+  const sl=sideLabels[m]||sideLabels[2];
+  document.getElementById('color-label-l').textContent=sl[0];
+  document.getElementById('color-label-r').textContent=sl[1];
   updateColor(sliderPos);
-  document.getElementById('save-btn').classList.add('ready');
+  const sb=document.getElementById('save-btn');
+  sb.classList.add('ready');
+  sb.style.pointerEvents='';
 }
 
 // Color
@@ -438,6 +465,60 @@ function lerp(stops,p){
   return{r:Math.round(s.r+(e.r-s.r)*t),g:Math.round(s.g+(e.g-s.g)*t),b:Math.round(s.b+(e.b-s.b)*t)};
 }
 
+// Glitter system
+const glitterSystems={};
+function initGlitter(canvasId,parentEl){
+  const c=document.getElementById(canvasId);
+  if(!c)return;
+  const rect=parentEl.getBoundingClientRect();
+  c.width=rect.width;c.height=rect.height;
+  const ctx=c.getContext('2d');
+  const particles=[];
+  for(let i=0;i<30;i++){
+    particles.push({
+      x:Math.random()*c.width,y:Math.random()*c.height,
+      size:Math.random()*2+0.5,
+      phase:Math.random()*Math.PI*2,
+      speed:Math.random()*2+1.5
+    });
+  }
+  glitterSystems[canvasId]={c,ctx,particles,intensity:0,raf:null};
+  function draw(){
+    const sys=glitterSystems[canvasId];
+    sys.ctx.clearRect(0,0,sys.c.width,sys.c.height);
+    if(sys.intensity<=0){sys.raf=requestAnimationFrame(draw);return}
+    const now=Date.now()*0.001;
+    sys.particles.forEach(p=>{
+      const twinkle=Math.max(0,Math.sin(now*p.speed+p.phase));
+      const a=twinkle*sys.intensity;
+      if(a<0.05)return;
+      // White sparkle dot
+      sys.ctx.beginPath();
+      sys.ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+      sys.ctx.fillStyle=`rgba(255,255,255,${a*0.9})`;
+      sys.ctx.fill();
+      // Cross rays
+      sys.ctx.strokeStyle=`rgba(255,255,255,${a*0.6})`;
+      sys.ctx.lineWidth=0.5;
+      const r=p.size*2.5;
+      sys.ctx.beginPath();sys.ctx.moveTo(p.x-r,p.y);sys.ctx.lineTo(p.x+r,p.y);sys.ctx.stroke();
+      sys.ctx.beginPath();sys.ctx.moveTo(p.x,p.y-r);sys.ctx.lineTo(p.x,p.y+r);sys.ctx.stroke();
+    });
+    sys.raf=requestAnimationFrame(draw);
+  }
+  draw();
+}
+function setGlitter(canvasId,intensity){
+  if(glitterSystems[canvasId])glitterSystems[canvasId].intensity=intensity;
+}
+function resizeGlitter(canvasId,parentEl){
+  const sys=glitterSystems[canvasId];
+  if(!sys)return;
+  const rect=parentEl.getBoundingClientRect();
+  sys.c.width=rect.width;sys.c.height=rect.height;
+  sys.particles.forEach(p=>{p.x=Math.random()*sys.c.width;p.y=Math.random()*sys.c.height});
+}
+
 function updateColor(p){
   if(!curMood)return;
   sliderPos=p;
@@ -446,9 +527,42 @@ function updateColor(p){
   document.getElementById('thumb').style.left=(p*100)+'%';
   document.getElementById('thumb').style.background=rgb(c);
   const pv=document.getElementById('color-preview');
-  pv.style.background=rgb(c);
-  pv.style.color=lum(c)>140?'rgba(0,0,0,.35)':'rgba(255,255,255,.4)';
-  pv.textContent='この色で記録する';
+  const t=guardVal/100;
+  // Guard affects display: guarded=deep/saturated, open=light/airy+glitter
+  const display=applyGuardToColor(c,t);
+  pv.style.background=rgb(display);
+  pv.style.color=lum(display)>140?'rgba(0,0,0,.35)':'rgba(255,255,255,.4)';
+  document.getElementById('preview-text').textContent='この色で記録する';
+  // Color nuance label per mood
+  const cf=document.getElementById('color-feel');
+  const nuances={
+    4:['ほんのり嬉しい','わくわく','テンション上がる！','最高に元気！','爆発してる！'],
+    3:['ちょっとほっとした','あったかい気持ち','けっこういい感じ','いい日だな','すごくいい日！'],
+    2:['ぼんやり','まあまあかな','いつも通り','わりと落ち着いてる','穏やかだな'],
+    1:['ちょっとだけ沈む','なんかモヤモヤ','けっこうしんどい','かなりきつい','もう無理']
+  };
+  const labels=nuances[curMood]||nuances[2];
+  const idx=Math.min(4,Math.floor(sliderPos*5));
+  cf.textContent=labels[idx];
+  cf.style.color='rgba(255,255,255,.5)';
+  if(!glitterSystems['preview-glitter'])initGlitter('preview-glitter',pv);
+  setGlitter('preview-glitter',t>0.5?((t-0.5)/0.5):0);
+}
+
+// Guard→color transform: guarded=deep&rich, open=light&airy
+function applyGuardToColor(c,t){
+  // t: 0=guarded, 1=open
+  if(t<0.4){
+    // Guarded: darken + boost saturation
+    const f=1-(0.4-t)/0.4*0.45; // 0.55 to 1.0
+    return{r:Math.round(c.r*f),g:Math.round(c.g*f),b:Math.round(c.b*f)};
+  }else if(t>0.6){
+    // Open: lighten toward pastel
+    const f=(t-0.6)/0.4; // 0 to 1
+    const lift=f*0.3;
+    return{r:Math.min(255,Math.round(c.r+(255-c.r)*lift)),g:Math.min(255,Math.round(c.g+(255-c.g)*lift)),b:Math.min(255,Math.round(c.b+(255-c.b)*lift))};
+  }
+  return{...c};
 }
 
 const spec=document.getElementById('spectrum');
@@ -482,6 +596,14 @@ function saveEntry(){
     overrideDate=null;
     document.getElementById('save-btn').textContent='SAVE';
   }
+  // Reset mood selection & disable button to prevent double tap
+  curMood=null;curColor=null;
+  document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('color-card').classList.remove('show');
+  const btn=document.getElementById('save-btn');
+  btn.classList.remove('ready');
+  btn.style.pointerEvents='none';
+  setTimeout(()=>{btn.style.pointerEvents=''},2000);
   showTodayMix();showToast();
 }
 
@@ -504,16 +626,59 @@ function saveReflect(){
 
 function showToast(){const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
 
+// Soft light blend: average base + slight screen lift for vibrancy
+function screenBlend(colors){
+  if(colors.length===1)return colors[0];
+  // Average
+  const avg={
+    r:Math.round(colors.reduce((s,c)=>s+c.r,0)/colors.length),
+    g:Math.round(colors.reduce((s,c)=>s+c.g,0)/colors.length),
+    b:Math.round(colors.reduce((s,c)=>s+c.b,0)/colors.length)
+  };
+  // Slight screen lift: blend toward brighter but capped
+  const lift=Math.min(0.3,colors.length*0.05);
+  return{
+    r:Math.min(255,Math.round(avg.r+(255-avg.r)*lift)),
+    g:Math.min(255,Math.round(avg.g+(255-avg.g)*lift)),
+    b:Math.min(255,Math.round(avg.b+(255-avg.b)*lift))
+  };
+}
+
 // Today mix
 function showTodayMix(){
   const entries=getE().filter(e=>e.type==='log'&&e.dateKey===dk(new Date()));
   const div=document.getElementById('today-mix');
   if(!entries.length){div.classList.remove('show');return}
   div.classList.add('show');
-  const avg={r:Math.round(entries.reduce((s,e)=>s+e.color.r,0)/entries.length),g:Math.round(entries.reduce((s,e)=>s+e.color.g,0)/entries.length),b:Math.round(entries.reduce((s,e)=>s+e.color.b,0)/entries.length)};
   const mc=document.getElementById('mix-color');
-  mc.style.background=rgb(avg);mc.style.color=lum(avg)>140?'rgba(0,0,0,.3)':'rgba(255,255,255,.4)';mc.textContent=entries.length+'回分の色';
-  document.getElementById('drops').innerHTML=entries.map(e=>`<div class="drop" style="background:${rgb(e.color)}"></div>`).join('');
+  // Build gradient from recorded colors in order (oldest to newest)
+  const sorted=[...entries].reverse();
+  const colors=sorted.map(e=>{
+    const d=applyGuardToColor(e.color,e.guard/100);
+    return rgb(d);
+  });
+  if(colors.length===1){
+    mc.style.background=colors[0];
+  }else{
+    const stops=colors.map((c,i)=>c+' '+Math.round(i/(colors.length-1)*100)+'%').join(',');
+    mc.style.background=`linear-gradient(to right,${stops})`;
+  }
+  mc.style.boxShadow='none';
+  mc.style.color='rgba(255,255,255,.4)';
+  document.getElementById('mix-text').textContent=entries.length+'回分の色';
+  // Glitter based on avg guard
+  const avgG=Math.round(entries.reduce((s,e)=>s+e.guard,0)/entries.length);
+  setTimeout(()=>{
+    if(!glitterSystems['mix-glitter'])initGlitter('mix-glitter',mc);
+    else resizeGlitter('mix-glitter',mc);
+    setGlitter('mix-glitter',avgG>50?((avgG-50)/50):0);
+  },100);
+  document.getElementById('drops').innerHTML=sorted.map(e=>{
+    const t=e.guard/100;
+    const d=applyGuardToColor(e.color,t);
+    const glow=t>0.5?`0 0 ${t*8}px rgba(${d.r},${d.g},${d.b},0.4)`:'none';
+    return`<div class="drop" style="background:${rgb(d)};box-shadow:${glow}"></div>`;
+  }).join('');
   document.getElementById('drop-info').textContent=entries.length+'回記録した';
 }
 
@@ -531,9 +696,17 @@ function calNav(d){calM+=d;if(calM>11){calM=0;calY++}if(calM<0){calM=11;calY--}c
 function mixForDay(key){
   const entries=getE().filter(e=>e.type==='log'&&e.dateKey===key);
   if(!entries.length)return null;
-  const avgG=entries.reduce((s,e)=>s+e.guard,0)/entries.length;
-  const darkFactor=0.7+avgG/100*0.3;
-  return{r:Math.round(entries.reduce((s,e)=>s+e.color.r,0)/entries.length*darkFactor),g:Math.round(entries.reduce((s,e)=>s+e.color.g,0)/entries.length*darkFactor),b:Math.round(entries.reduce((s,e)=>s+e.color.b,0)/entries.length*darkFactor),n:entries.length};
+  const sorted=[...entries].reverse();
+  const colors=sorted.map(e=>{
+    const d=applyGuardToColor(e.color,e.guard/100);
+    return rgb(d);
+  });
+  const avgG=Math.round(entries.reduce((s,e)=>s+e.guard,0)/entries.length);
+  if(colors.length===1){
+    return{bg:colors[0],guard:avgG,n:1};
+  }
+  const stops=colors.map((c,i)=>c+' '+Math.round(i/(colors.length-1)*100)+'%').join(',');
+  return{bg:`linear-gradient(135deg,${stops})`,guard:avgG,n:colors.length};
 }
 
 function showDayDetail(key,day){
@@ -611,7 +784,7 @@ function renderCal(){
     const mix=mixForDay(key);
     let cls='cal-day';let sty='';
     if(isTo)cls+=' today';if(isFu)cls+=' future';
-    if(mix){cls+=' has';sty=`background:${rgb(mix)}`}
+    if(mix){cls+=' has';const glow=mix.guard>50?`0 0 ${mix.guard/8}px rgba(255,255,255,0.15)`:'none';sty=`background:${mix.bg};box-shadow:${glow}`}
     h+=`<div class="${cls}" style="${sty}" onclick="showDayDetail('${key}',${d})" data-key="${key}"><span class="dn">${d}</span></div>`;
   }
   grid.innerHTML=h;
@@ -632,10 +805,10 @@ function renderCal(){
     entries.forEach(e=>{if(counts[e.mood]!==undefined)counts[e.mood]++});
     const total=entries.length;
     const moodInfo=[
-      {m:4,emoji:'🥳',label:'元気！',color:'#FFD700'},
-      {m:3,emoji:'🙂',label:'ちょっと元気',color:'#FF6B6B'},
-      {m:2,emoji:'😐',label:'普通',color:'#66BB6A'},
-      {m:1,emoji:'😢',label:'元気ない',color:'#5C9CE6'}
+      {m:4,emoji:'🥳',label:'元気！',color:'#FFD23C'},
+      {m:3,emoji:'🙂',label:'ちょっと元気',color:'#FF7896'},
+      {m:2,emoji:'😐',label:'普通',color:'#BEAAE1'},
+      {m:1,emoji:'😢',label:'元気ない',color:'#6EAAFF'}
     ];
     mbBar.innerHTML=moodInfo.filter(mi=>counts[mi.m]>0).map(mi=>`<div class="mb-bar-seg" style="width:${(counts[mi.m]/total*100).toFixed(1)}%;background:${mi.color}"></div>`).join('');
     mbLeg.innerHTML=moodInfo.filter(mi=>counts[mi.m]>0).map(mi=>`<div class="mb-item"><div class="mb-dot" style="background:${mi.color}"></div>${mi.emoji} ${counts[mi.m]}回</div>`).join('');
@@ -662,8 +835,10 @@ function renderHist(){
         <button class="entry-del" onclick="delE('${e.id}')">削除</button></div>`;
     }
     const gLabel=e.guard<30?'力入ってる':e.guard<45?'ちょっと力入ってる':e.guard<55?'':e.guard<70?'わりと自然体':'開いてる';
+    const dc=applyGuardToColor(e.color,e.guard/100);
+    const glow=e.guard>50?`0 0 ${e.guard/10}px rgba(${dc.r},${dc.g},${dc.b},0.4)`:'none';
     return`<div class="entry"><div class="entry-head"><span class="entry-time">${ds}</span>
-      <div class="entry-meta"><div class="entry-color" style="background:${rgb(e.color)}"></div>${gLabel?`<span class="entry-guard">${gLabel}</span>`:''}</div></div>
+      <div class="entry-meta"><div class="entry-color" style="background:${rgb(dc)};box-shadow:${glow}"></div>${gLabel?`<span class="entry-guard">${gLabel}</span>`:''}</div></div>
       ${e.text?`<div class="entry-text">${esc(e.text)}</div>`:''}
       ${e.good?`<div class="entry-good">✨ ${esc(e.good)}</div>`:''}
       <button class="entry-del" onclick="delE('${e.id}')">削除</button></div>`;
@@ -755,8 +930,50 @@ function initStars(){
   window.addEventListener('resize',()=>{c.width=window.innerWidth;c.height=window.innerHeight});
 }
 
+// Sparkles (openness particles)
+function initSparkles(){
+  const c=document.getElementById('sparkle-canvas');
+  const ctx=c.getContext('2d');
+  c.width=window.innerWidth;c.height=window.innerHeight;
+  const particles=[];
+  for(let i=0;i<40;i++){
+    particles.push({
+      x:Math.random()*c.width,
+      y:Math.random()*c.height,
+      size:Math.random()*2+1,
+      speedY:-(Math.random()*0.3+0.1),
+      speedX:(Math.random()-0.5)*0.2,
+      life:Math.random()*Math.PI*2,
+      hue:Math.floor(Math.random()*60)+30 // gold-ish range
+    });
+  }
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    const now=Date.now()*0.001;
+    particles.forEach(p=>{
+      p.y+=p.speedY;p.x+=p.speedX;
+      if(p.y<-10){p.y=c.height+10;p.x=Math.random()*c.width}
+      const twinkle=0.3+0.7*Math.abs(Math.sin(now*1.5+p.life));
+      const grd=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.size*2);
+      grd.addColorStop(0,`hsla(${p.hue},80%,75%,${twinkle*0.8})`);
+      grd.addColorStop(0.5,`hsla(${p.hue},60%,85%,${twinkle*0.3})`);
+      grd.addColorStop(1,`hsla(${p.hue},40%,90%,0)`);
+      ctx.beginPath();ctx.arc(p.x,p.y,p.size*2,0,Math.PI*2);
+      ctx.fillStyle=grd;ctx.fill();
+      // Cross sparkle
+      ctx.strokeStyle=`hsla(${p.hue},80%,85%,${twinkle*0.5})`;
+      ctx.lineWidth=0.5;
+      ctx.beginPath();ctx.moveTo(p.x-p.size*1.5,p.y);ctx.lineTo(p.x+p.size*1.5,p.y);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(p.x,p.y-p.size*1.5);ctx.lineTo(p.x,p.y+p.size*1.5);ctx.stroke();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+  window.addEventListener('resize',()=>{c.width=window.innerWidth;c.height=window.innerHeight});
+}
+
 // Init
-initGuard();initStars();showTodayMix();
+initGuard();initStars();initSparkles();showTodayMix();
 </script>
 
 </body>
