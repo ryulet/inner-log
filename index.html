@@ -24,7 +24,7 @@ body>*:not(#star-canvas):not(#sparkle-canvas){position:relative;z-index:1}
 .sun-rays span:nth-child(1){transform:rotate(0deg)}.sun-rays span:nth-child(2){transform:rotate(45deg)}.sun-rays span:nth-child(3){transform:rotate(90deg)}.sun-rays span:nth-child(4){transform:rotate(135deg)}.sun-rays span:nth-child(5){transform:rotate(180deg)}.sun-rays span:nth-child(6){transform:rotate(225deg)}.sun-rays span:nth-child(7){transform:rotate(270deg)}.sun-rays span:nth-child(8){transform:rotate(315deg)}
 
 .hdr{text-align:center;padding:20px 0 12px;position:relative}
-.hdr-date{position:absolute;right:8px;top:10px;font-family:'Outfit',sans-serif;font-size:11px;color:rgba(255,255,255,.4);letter-spacing:0.5px}
+.hdr-date{position:absolute;right:8px;top:8px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:300;color:rgba(255,255,255,.5);letter-spacing:1px}
 .hdr h1{font-family:'Outfit',sans-serif;font-size:26px;font-weight:700;letter-spacing:3px;background:linear-gradient(135deg,#FFD700,#FF6B6B,#7b61ff,#4a6fa5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase}
 .hdr p{color:rgba(255,255,255,.5);font-size:11px;letter-spacing:2px;margin-top:4px}
 
@@ -75,6 +75,23 @@ body>*:not(#star-canvas):not(#sparkle-canvas){position:relative;z-index:1}
 .good-card .g-icon{font-size:18px;flex-shrink:0}
 .good-card input{flex:1;background:transparent;border:none;color:#f0f0f5;font-family:'Zen Kaku Gothic New',sans-serif;font-size:13px;outline:none}
 .good-card input::placeholder{color:rgba(255,255,255,.18)}
+
+/* Health toggle */
+.health-toggle{display:flex;align-items:center;gap:6px;padding:12px 18px;margin-bottom:0;color:rgba(255,255,255,.35);font-size:12px;cursor:pointer;transition:color .2s}
+.health-toggle:active{color:rgba(255,255,255,.5)}
+.health-icon{font-size:14px}
+.health-arrow{font-size:8px;transition:transform .3s;margin-left:auto}
+.health-arrow.open{transform:rotate(180deg)}
+.health-panel{max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;padding:0 18px;background:rgba(10,15,30,.5);border-radius:14px;margin-bottom:14px}
+.health-panel.show{max-height:150px;padding:14px 18px}
+.health-checks{display:flex;flex-direction:column;gap:10px;margin-bottom:10px}
+.health-check{display:flex;align-items:center;gap:10px;font-size:12px;color:rgba(255,255,255,.5);cursor:pointer}
+.health-check input{display:none}
+.hc-box{width:20px;height:20px;border-radius:6px;border:2px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.health-check input:checked+.hc-box{border-color:#FF7896;background:rgba(255,120,150,.15)}
+.health-check input:checked+.hc-box::after{content:'✓';color:#FF7896;font-size:12px}
+.health-note{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:8px 12px;color:#f0f0f5;font-family:'Zen Kaku Gothic New',sans-serif;font-size:12px;outline:none}
+.health-note::placeholder{color:rgba(255,255,255,.15)}
 
 .save-btn{width:100%;padding:16px;background:linear-gradient(135deg,#FFD700,#FF6B6B,#7b61ff);border:none;border-radius:14px;color:#fff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 20px rgba(255,107,107,.15);margin-bottom:12px;transition:.2s;opacity:.4}
 .save-btn.ready{opacity:1}
@@ -260,6 +277,17 @@ body>*:not(#star-canvas):not(#sparkle-canvas){position:relative;z-index:1}
   <div class="good-card">
     <span class="g-icon">✨</span>
     <input id="f-good" placeholder="ちょっとしたいいこと">
+  </div>
+
+  <div class="health-toggle" onclick="toggleHealth()">
+    <span class="health-icon">🩹</span> <span id="health-toggle-text">体調メモ</span> <span class="health-arrow" id="health-arrow">▼</span>
+  </div>
+  <div class="health-panel" id="health-panel">
+    <div class="health-checks">
+      <label class="health-check"><input type="checkbox" id="h-neck"><span class="hc-box"></span>首・肩がつらい</label>
+      <label class="health-check"><input type="checkbox" id="h-sleep"><span class="hc-box"></span>寝不足感がある</label>
+    </div>
+    <input class="health-note" id="h-note" placeholder="その他（花粉、筋肉痛など）">
   </div>
 
 <button class="save-btn" id="save-btn" onclick="saveEntry()">SAVE</button>
@@ -582,6 +610,13 @@ function sd(){
   document.addEventListener('touchmove',mv,{passive:false});document.addEventListener('touchend',up);
 }
 
+// Health toggle
+function toggleHealth(){
+  const p=document.getElementById('health-panel');
+  const a=document.getElementById('health-arrow');
+  p.classList.toggle('show');a.classList.toggle('open');
+}
+
 // Save
 function saveEntry(){
   if(!curMood||!curColor)return;
@@ -594,10 +629,18 @@ function saveEntry(){
     saveDate=new Date();
     saveDateKey=dk(saveDate);
   }
-  const e={id:Date.now(),date:saveDate.toISOString(),dateKey:saveDateKey,type:'log',mood:curMood,color:{...curColor},guard:guardVal,text:document.getElementById('f-text').value.trim(),good:document.getElementById('f-good').value.trim()};
+  const hNeck=document.getElementById('h-neck').checked?1:0;
+  const hSleep=document.getElementById('h-sleep').checked?1:0;
+  const hNote=document.getElementById('h-note').value.trim();
+  const e={id:Date.now(),date:saveDate.toISOString(),dateKey:saveDateKey,type:'log',mood:curMood,color:{...curColor},guard:guardVal,text:document.getElementById('f-text').value.trim(),good:document.getElementById('f-good').value.trim(),hNeck,hSleep,hNote};
   const entries=getE();entries.unshift(e);saveE(entries);
   document.getElementById('f-text').value='';document.getElementById('f-good').value='';
-  // Reset override
+  // Reset health
+  document.getElementById('h-neck').checked=false;
+  document.getElementById('h-sleep').checked=false;
+  document.getElementById('h-note').value='';
+  document.getElementById('health-panel').classList.remove('show');
+  document.getElementById('health-arrow').classList.remove('open');  // Reset override
   if(overrideDate){
     overrideDate=null;
     document.getElementById('save-btn').textContent='SAVE';
@@ -850,6 +893,7 @@ function renderHist(){
       <div class="entry-meta"><div class="entry-color" style="background:${rgb(dc)};box-shadow:${glow}"></div>${gLabel?`<span class="entry-guard">${gLabel}</span>`:''}</div></div>
       ${e.text?`<div class="entry-text">${esc(e.text)}</div>`:''}
       ${e.good?`<div class="entry-good">✨ ${esc(e.good)}</div>`:''}
+      ${(e.hNeck||e.hSleep||e.hNote)?`<div style="font-size:11px;color:rgba(255,120,150,.6);margin-top:6px">🩹 ${e.hNeck?'首肩 ':''}${e.hSleep?'寝不足 ':''}${e.hNote||''}</div>`:''}
       <button class="entry-del" onclick="delE('${e.id}')">削除</button></div>`;
   }).join('');
 }
@@ -887,12 +931,12 @@ function exportCSV(){
   const entries=getE();
   if(!entries.length){showModal('記録がないよ',null,'OK');return}
   const BOM='\uFEFF';
-  const hdr='日時,日付キー,タイプ,気分,色R,色G,色B,構え度,テキスト,いいこと,振り返り結果,振り返りメモ';
+  const hdr='日時,日付キー,タイプ,気分,色R,色G,色B,構え度,テキスト,いいこと,振り返り結果,振り返りメモ,首肩,寝不足,体調備考';
   const rows=entries.map(e=>{
     const d=new Date(e.date);
     const ds=d.toLocaleDateString('ja-JP')+' '+d.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
-    if(e.type==='reflect')return[ds,e.dateKey,'振り返り','','','','','','','',{good:'良かった',mid:'普通',bad:'悪かった'}[e.actual]||'',csvE(e.note)].join(',');
-    return[ds,e.dateKey,'記録',MOOD_LABELS[e.mood],e.color.r,e.color.g,e.color.b,e.guard,csvE(e.text),csvE(e.good),'',''].join(',');
+    if(e.type==='reflect')return[ds,e.dateKey,'振り返り','','','','','','','',{good:'良かった',mid:'普通',bad:'悪かった'}[e.actual]||'',csvE(e.note),'','',''].join(',');
+    return[ds,e.dateKey,'記録',MOOD_LABELS[e.mood],e.color.r,e.color.g,e.color.b,e.guard,csvE(e.text),csvE(e.good),'','',e.hNeck||0,e.hSleep||0,csvE(e.hNote||'')].join(',');
   });
   const csv=BOM+hdr+'\n'+rows.join('\n');
   // Try Blob download first
