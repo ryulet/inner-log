@@ -24,6 +24,7 @@ body>*:not(#star-canvas):not(#sparkle-canvas){position:relative;z-index:1}
 .sun-rays span:nth-child(1){transform:rotate(0deg)}.sun-rays span:nth-child(2){transform:rotate(45deg)}.sun-rays span:nth-child(3){transform:rotate(90deg)}.sun-rays span:nth-child(4){transform:rotate(135deg)}.sun-rays span:nth-child(5){transform:rotate(180deg)}.sun-rays span:nth-child(6){transform:rotate(225deg)}.sun-rays span:nth-child(7){transform:rotate(270deg)}.sun-rays span:nth-child(8){transform:rotate(315deg)}
 
 .hdr{text-align:center;padding:20px 0 12px;position:relative}
+.hdr-date{position:absolute;right:8px;top:10px;font-family:'Outfit',sans-serif;font-size:11px;color:rgba(255,255,255,.4);letter-spacing:0.5px}
 .hdr h1{font-family:'Outfit',sans-serif;font-size:26px;font-weight:700;letter-spacing:3px;background:linear-gradient(135deg,#FFD700,#FF6B6B,#7b61ff,#4a6fa5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase}
 .hdr p{color:rgba(255,255,255,.5);font-size:11px;letter-spacing:2px;margin-top:4px}
 
@@ -209,6 +210,7 @@ body>*:not(#star-canvas):not(#sparkle-canvas){position:relative;z-index:1}
     <span class="cel-icon" id="cel-icon">🌙</span>
     <div class="sun-rays" id="sun-rays"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
   </div>
+  <div class="hdr-date" id="hdr-date"></div>
   <h1>Unguard</h1>
   <p>構えを外す記録</p>
 </div>
@@ -351,6 +353,10 @@ function initGuard(){
   const q=QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)];
   document.getElementById('guard-q').textContent=q;
   updateGuard(50);
+  // Today's date
+  const now=new Date();
+  const wd=['日','月','火','水','木','金','土'];
+  document.getElementById('hdr-date').textContent=`${now.getMonth()+1}/${now.getDate()} (${wd[now.getDay()]})`;
 }
 
 function updateGuard(v){
@@ -597,9 +603,12 @@ function saveEntry(){
     document.getElementById('save-btn').textContent='SAVE';
   }
   // Reset mood selection & disable button to prevent double tap
-  curMood=null;curColor=null;
+  curMood=null;curColor=null;sliderPos=0.5;
   document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('sel'));
   document.getElementById('color-card').classList.remove('show');
+  // Reset guard slider to center
+  document.getElementById('guard-slider').value=50;
+  updateGuard(50);
   const btn=document.getElementById('save-btn');
   btn.classList.remove('ready');
   btn.style.pointerEvents='none';
@@ -865,12 +874,12 @@ function showModal(msg,onOk,okLabel,cancelLabel){
 
 function delE(id){
   showModal('この記録を削除する？',()=>{
-    saveE(getE().filter(e=>String(e.id)!==String(id)));renderHist();
+    saveE(getE().filter(e=>String(e.id)!==String(id)));renderHist();showTodayMix();
   },'削除','やめる');
 }
 function clearAll(){
   showModal('全部消す？ 元に戻せないよ',()=>{
-    saveE([]);renderHist();showToast();
+    saveE([]);renderHist();showTodayMix();showToast();
   },'全削除','やめる');
 }
 
