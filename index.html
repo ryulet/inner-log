@@ -254,7 +254,7 @@ body>*:not(#star-canvas):not(#sparkle-canvas){position:relative;z-index:1}
     <div class="card-label">今の気分</div>
     <div class="mood-row">
       <button class="mood-btn" data-m="4" onclick="pickMood(4)"><span class="m-emoji">🥳</span><span class="m-label">元気！</span></button>
-      <button class="mood-btn" data-m="3" onclick="pickMood(3)"><span class="m-emoji">🙂</span><span class="m-label">ちょっと元気</span></button>
+      <button class="mood-btn" data-m="3" onclick="pickMood(3)"><span class="m-emoji">🙂</span><span class="m-label">いい感じ</span></button>
       <button class="mood-btn" data-m="2" onclick="pickMood(2)"><span class="m-emoji">😐</span><span class="m-label">普通</span></button>
       <button class="mood-btn" data-m="1" onclick="pickMood(1)"><span class="m-emoji">😢</span><span class="m-label">元気ない</span></button>
     </div>
@@ -359,7 +359,7 @@ body>*:not(#star-canvas):not(#sparkle-canvas){position:relative;z-index:1}
 
 <script>
 const QUESTIONS=['今、力入ってる？','素の自分でいられてる？','心、開いてる？','リラックスできてる？','今、自然体？'];
-const MOOD_LABELS={4:'元気！',3:'ちょっと元気',2:'普通',1:'元気ない'};
+const MOOD_LABELS={4:'元気！',3:'いい感じ',2:'普通',1:'元気ない'};
 const MOOD_RANGES={
   4:{hint:'元気の色を選ぶ',stops:[{p:0,r:255,g:248,b:210},{p:.25,r:255,g:230,b:130},{p:.5,r:255,g:210,b:60},{p:.75,r:255,g:185,b:40},{p:1,r:255,g:160,b:20}],grad:'linear-gradient(to right,#FFF8D2,#FFE682,#FFD23C,#FFB928,#FFA014)'},
   3:{hint:'あたたかさの色を選ぶ',stops:[{p:0,r:255,g:210,b:220},{p:.25,r:255,g:170,b:190},{p:.5,r:255,g:120,b:150},{p:.75,r:245,g:90,b:130},{p:1,r:230,g:60,b:110}],grad:'linear-gradient(to right,#FFD2DC,#FFAABE,#FF7896,#F55A82,#E63C6E)'},
@@ -384,7 +384,7 @@ function initGuard(){
   // Today's date
   const now=new Date();
   const wd=['日','月','火','水','木','金','土'];
-  document.getElementById('hdr-date').textContent=`${now.getMonth()+1}/${now.getDate()} (${wd[now.getDay()]})`;
+  document.getElementById('hdr-date').textContent=`${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()} (${wd[now.getDay()]})`;
 }
 
 function updateGuard(v){
@@ -481,7 +481,7 @@ function pickMood(m){
   document.getElementById('color-hint').textContent=MOOD_RANGES[m].hint;
   document.getElementById('spectrum').style.background=MOOD_RANGES[m].grad;
   // Update side labels per mood
-  const sideLabels={4:['ちょっと','めちゃくちゃ'],3:['ほんのり','すごく'],2:['ぼんやり','しっかり'],1:['ちょっと','かなり']};
+  const sideLabels={4:['嬉しい','最高！'],3:['ほっとした','充実してる'],2:['ぼんやり','チル'],1:['ちょっと沈む','もう無理']};
   const sl=sideLabels[m]||sideLabels[2];
   document.getElementById('color-label-l').textContent=sl[0];
   document.getElementById('color-label-r').textContent=sl[1];
@@ -570,10 +570,10 @@ function updateColor(p){
   // Color nuance label per mood
   const cf=document.getElementById('color-feel');
   const nuances={
-    4:['ほんのり嬉しい','わくわく','テンション上がる！','最高に元気！','爆発してる！'],
-    3:['ちょっとほっとした','あったかい気持ち','けっこういい感じ','いい日だな','すごくいい日！'],
-    2:['ぼんやり','まあまあかな','いつも通り','わりと落ち着いてる','穏やかだな'],
-    1:['ちょっとだけ沈む','なんかモヤモヤ','けっこうしんどい','かなりきつい','もう無理']
+    4:['嬉しい','楽しい','ワクワク','テンション高い','最高！'],
+    3:['ほっとした','微笑ましい','あったかい','心地いい','充実してる'],
+    2:['ぼんやり','いつも通り','穏やか','まったり','チル'],
+    1:['ちょっと沈む','モヤモヤ','しんどい','疲れた','もう無理']
   };
   const labels=nuances[curMood]||nuances[2];
   const idx=Math.min(4,Math.floor(sliderPos*5));
@@ -782,7 +782,7 @@ function showDayDetail(key,day){
   if(!entries.length){
     html='<div class="dd-none">この日は記録がないよ</div>';
   }else{
-    const ML={4:'🥳 元気！',3:'🙂 ちょっと元気',2:'😐 普通',1:'😢 元気ない'};
+    const ML={4:'🥳 元気！',3:'🙂 いい感じ',2:'😐 普通',1:'😢 元気ない'};
     html=entries.map(e=>{
       const d=new Date(e.date);
       const tm=d.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
@@ -858,7 +858,7 @@ function renderCal(){
     const total=entries.length;
     const moodInfo=[
       {m:4,emoji:'🥳',label:'元気！',color:'#FFD23C'},
-      {m:3,emoji:'🙂',label:'ちょっと元気',color:'#FF7896'},
+      {m:3,emoji:'🙂',label:'いい感じ',color:'#FF7896'},
       {m:2,emoji:'😐',label:'普通',color:'#BEAAE1'},
       {m:1,emoji:'😢',label:'元気ない',color:'#6EAAFF'}
     ];
