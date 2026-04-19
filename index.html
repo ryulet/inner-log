@@ -280,10 +280,11 @@ body>*:not(#star-canvas):not(#sparkle-canvas){position:relative;z-index:1}
   </div>
 
   <div class="health-toggle" onclick="toggleHealth()">
-    <span class="health-icon">🩹</span> <span id="health-toggle-text">体調メモ</span> <span class="health-arrow" id="health-arrow">▼</span>
+    <span class="health-icon">📋</span> <span id="health-toggle-text">体調・状況メモ</span> <span class="health-arrow" id="health-arrow">▼</span>
   </div>
   <div class="health-panel" id="health-panel">
     <div class="health-checks">
+      <label class="health-check"><input type="checkbox" id="h-work"><span class="hc-box"></span>仕事 / 仕事関連あり</label>
       <label class="health-check"><input type="checkbox" id="h-neck"><span class="hc-box"></span>首・肩がつらい</label>
       <label class="health-check"><input type="checkbox" id="h-sleep"><span class="hc-box"></span>寝不足感がある</label>
     </div>
@@ -629,13 +630,15 @@ function saveEntry(){
     saveDate=new Date();
     saveDateKey=dk(saveDate);
   }
+  const hWork=document.getElementById('h-work').checked?1:0;
   const hNeck=document.getElementById('h-neck').checked?1:0;
   const hSleep=document.getElementById('h-sleep').checked?1:0;
   const hNote=document.getElementById('h-note').value.trim();
-  const e={id:Date.now(),date:saveDate.toISOString(),dateKey:saveDateKey,type:'log',mood:curMood,color:{...curColor},guard:guardVal,text:document.getElementById('f-text').value.trim(),good:document.getElementById('f-good').value.trim(),hNeck,hSleep,hNote};
+  const e={id:Date.now(),date:saveDate.toISOString(),dateKey:saveDateKey,type:'log',mood:curMood,color:{...curColor},guard:guardVal,text:document.getElementById('f-text').value.trim(),good:document.getElementById('f-good').value.trim(),hWork,hNeck,hSleep,hNote};
   const entries=getE();entries.unshift(e);saveE(entries);
   document.getElementById('f-text').value='';document.getElementById('f-good').value='';
   // Reset health
+  document.getElementById('h-work').checked=false;
   document.getElementById('h-neck').checked=false;
   document.getElementById('h-sleep').checked=false;
   document.getElementById('h-note').value='';
@@ -893,7 +896,7 @@ function renderHist(){
       <div class="entry-meta"><div class="entry-color" style="background:${rgb(dc)};box-shadow:${glow}"></div>${gLabel?`<span class="entry-guard">${gLabel}</span>`:''}</div></div>
       ${e.text?`<div class="entry-text">${esc(e.text)}</div>`:''}
       ${e.good?`<div class="entry-good">✨ ${esc(e.good)}</div>`:''}
-      ${(e.hNeck||e.hSleep||e.hNote)?`<div style="font-size:11px;color:rgba(255,120,150,.6);margin-top:6px">🩹 ${e.hNeck?'首肩 ':''}${e.hSleep?'寝不足 ':''}${e.hNote||''}</div>`:''}
+      ${(e.hWork||e.hNeck||e.hSleep||e.hNote)?`<div style="font-size:11px;color:rgba(255,120,150,.6);margin-top:6px">📋 ${e.hWork?'仕事 ':''}${e.hNeck?'首肩 ':''}${e.hSleep?'寝不足 ':''}${e.hNote||''}</div>`:''}
       <button class="entry-del" onclick="delE('${e.id}')">削除</button></div>`;
   }).join('');
 }
@@ -931,12 +934,12 @@ function exportCSV(){
   const entries=getE();
   if(!entries.length){showModal('記録がないよ',null,'OK');return}
   const BOM='\uFEFF';
-  const hdr='日時,日付キー,タイプ,気分,色R,色G,色B,構え度,テキスト,いいこと,振り返り結果,振り返りメモ,首肩,寝不足,体調備考';
+  const hdr='日時,日付キー,タイプ,気分,色R,色G,色B,構え度,テキスト,いいこと,振り返り結果,振り返りメモ,仕事関連,首肩,寝不足,体調備考';
   const rows=entries.map(e=>{
     const d=new Date(e.date);
     const ds=d.toLocaleDateString('ja-JP')+' '+d.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
-    if(e.type==='reflect')return[ds,e.dateKey,'振り返り','','','','','','','',{good:'良かった',mid:'普通',bad:'悪かった'}[e.actual]||'',csvE(e.note),'','',''].join(',');
-    return[ds,e.dateKey,'記録',MOOD_LABELS[e.mood],e.color.r,e.color.g,e.color.b,e.guard,csvE(e.text),csvE(e.good),'','',e.hNeck||0,e.hSleep||0,csvE(e.hNote||'')].join(',');
+    if(e.type==='reflect')return[ds,e.dateKey,'振り返り','','','','','','','',{good:'良かった',mid:'普通',bad:'悪かった'}[e.actual]||'',csvE(e.note),'','','',''].join(',');
+    return[ds,e.dateKey,'記録',MOOD_LABELS[e.mood],e.color.r,e.color.g,e.color.b,e.guard,csvE(e.text),csvE(e.good),'','',e.hWork||0,e.hNeck||0,e.hSleep||0,csvE(e.hNote||'')].join(',');
   });
   const csv=BOM+hdr+'\n'+rows.join('\n');
   // Try Blob download first
